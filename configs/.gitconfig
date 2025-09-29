@@ -1,11 +1,25 @@
 [user]
     name = Your Name
     email = your.email@example.com
+    # Uncomment and set your signing key after setting up GPG
+    # signingkey = YOUR_GPG_KEY_ID
 
 [core]
     editor = vim
     autocrlf = input
     safecrlf = true
+
+[commit]
+    # Uncomment to enable automatic commit signing
+    # gpgsign = true
+
+[tag]
+    # Uncomment to enable automatic tag signing
+    # gpgsign = true
+
+[gpg]
+    # Use the gpg program for signing
+    program = gpg
 
 [init]
     defaultBranch = main

@@ -168,6 +168,29 @@ setup_directories() {
     fi
 }
 
+# Setup persistent directories for credentials and configuration
+setup_persistent_directories() {
+    echo "🔐 Setting up persistent directories for credentials..."
+    
+    # Create directories for persistent storage
+    mkdir -p /home/dev/.config/gh
+    mkdir -p /home/dev/.gnupg
+    
+    # Set proper permissions for GPG directory
+    chmod 700 /home/dev/.gnupg
+    
+    # Create git credentials file
+    touch /home/dev/.git-credentials
+    chmod 600 /home/dev/.git-credentials
+    
+    # Ensure ownership is correct
+    sudo chown -R dev:dev /home/dev/.config
+    sudo chown -R dev:dev /home/dev/.gnupg
+    sudo chown dev:dev /home/dev/.git-credentials
+    
+    echo "✅ Persistent directories setup completed"
+}
+
 # Main execution
 main() {
     echo "🚀 Starting additional tools installation..."
@@ -182,6 +205,7 @@ main() {
     install_go_tools
     install_zsh_plugins
     setup_directories
+    setup_persistent_directories
     
     # Optional installations (uncomment as needed)
     # install_nodejs_tools

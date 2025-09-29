@@ -36,7 +36,9 @@ RUN pacman -S --noconfirm \
         unzip \
         tar \
         gzip \
-        ca-certificates
+        ca-certificates \
+        github-cli \
+        gnupg
 
 # Install Go (separate layer for better caching)
 RUN pacman -S --noconfirm go

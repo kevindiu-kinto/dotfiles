@@ -1,7 +1,20 @@
 # Path to oh-my-zsh installation
 export ZSH="$HOME/.oh-my-zsh"
 
-# Theme
+# SSH Agent configuration (container-friendly)
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    eval "$(ssh-agent -s)" > /dev/null 2>&1
+fi
+
+# GitHub CLI completion
+if command -v gh &> /dev/null; then
+    eval "$(gh completion -s zsh)"
+fi
+
+# GPG TTY configuration for commit signing
+export GPG_TTY=$(tty)
+
+# Welcome messageme
 ZSH_THEME="robbyrussell"
 
 # Plugins
@@ -40,12 +53,18 @@ alias egrep='egrep --color=auto'
 alias gs='git status'
 alias ga='git add'
 alias gc='git commit'
+alias gcs='git commit -S'  # Signed commit
 alias gp='git push'
 alias gl='git log --oneline'
 alias gd='git diff'
 alias gco='git checkout'
 alias gb='git branch'
 alias gm='git merge'
+
+# GitHub CLI aliases
+alias ghpr='gh pr create'
+alias ghpv='gh pr view'
+alias ghpl='gh pr list'
 
 # Docker aliases
 alias dps='docker ps'

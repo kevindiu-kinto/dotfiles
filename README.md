@@ -131,7 +131,72 @@ ports:
   - "3000:3000"  # Node.js dev server
 ```
 
-## 🔌 VS Code Integration
+## � GitHub Authentication & Commit Signing
+
+This environment provides persistent storage for GitHub credentials and GPG keys, so you only need to set them up once.
+
+### GitHub CLI Authentication
+
+1. Enter the container:
+   ```bash
+   make shell
+   ```
+
+2. Login to GitHub:
+   ```bash
+   gh auth login
+   ```
+   Follow the interactive prompts to authenticate with GitHub.
+
+### Setting up Commit Signing
+
+1. Generate a GPG key (inside the container):
+   ```bash
+   gpg --full-generate-key
+   # Choose RSA and RSA, 4096 bits, no expiration
+   # Use your GitHub email address
+   ```
+
+2. Get your GPG key ID:
+   ```bash
+   gpg --list-secret-keys --keyid-format=long
+   # Look for sec   rsa4096/XXXXXXXXXXXXXXXX <- this is your key ID
+   ```
+
+3. Export your public key:
+   ```bash
+   gpg --armor --export YOUR_KEY_ID
+   ```
+
+4. Add the public key to GitHub:
+   - Go to GitHub Settings → SSH and GPG keys
+   - Click "New GPG key" and paste the public key
+
+5. Configure Git to use your signing key:
+   ```bash
+   git config --global user.signingkey YOUR_KEY_ID
+   git config --global commit.gpgsign true
+   git config --global tag.gpgsign true
+   ```
+
+### Persistent Storage
+
+Your credentials are automatically persisted in Docker volumes:
+- `gh-config` - GitHub CLI authentication
+- `git-credentials` - Git credential storage  
+- `gnupg-config` - GPG keys and configuration
+
+After container rebuilds, your authentication and signing keys will be retained!
+
+### Useful Aliases
+
+The environment includes helpful aliases:
+- `gcs` - Git commit with signature (`git commit -S`)
+- `ghpr` - Create GitHub pull request (`gh pr create`)
+- `ghpv` - View GitHub pull request (`gh pr view`)
+- `ghpl` - List GitHub pull requests (`gh pr list`)
+
+## �🔌 VS Code Integration
 
 1. Install the "Remote - SSH" extension in VS Code
 2. Add this to your SSH config (`~/.ssh/config`):

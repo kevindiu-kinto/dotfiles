@@ -25,6 +25,12 @@ services:
       - go-mod-cache:/go/pkg/mod
       # Persist zsh history
       - zsh-history:/home/dev/.zsh_history_data
+      # Persist GitHub CLI configuration and credentials
+      - gh-config:/home/dev/.config/gh
+      # Persist Git credentials and configuration
+      - git-credentials:/home/dev/.git-credentials
+      # Persist GPG keys for commit signing
+      - gnupg-config:/home/dev/.gnupg
     environment:
       - GOPROXY=https://proxy.golang.org,direct
       - GOSUMDB=sum.golang.org
@@ -35,3 +41,6 @@ services:
 volumes:
   go-mod-cache:
   zsh-history:
+  gh-config:
+  git-credentials:
+  gnupg-config:
