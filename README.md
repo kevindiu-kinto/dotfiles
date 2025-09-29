@@ -7,7 +7,7 @@ A comprehensive Docker-based development environment with Arch Linux, optimized 
 ```bash
 git clone https://github.com/kevindiu-kinto/dotfiles.git
 cd dotfiles
-make build          # First time: ~4 minutes, then ~30s with cache
+make build
 make shell          # Start coding!
 
 # Maintenance:
@@ -24,7 +24,7 @@ make clean          # Clean cache
 
 2. Build and start the environment:
    ```bash
-   # Build (first time ~4 minutes, then ~30s with cache)
+   # Build
    make build
 
    # See all available commands
@@ -110,18 +110,6 @@ make rebuild          # Full rebuild without cache (when something is broken)
 ```
 
 
-
-### 💡 Performance Tips
-- **Daily workflow**: Just use `make build` - it uses cache automatically (⚡ 87% faster)
-- **First build**: Takes ~4 minutes, but subsequent builds are much faster
-- **Smart caching**: Multi-stage build automatically optimizes layer caching
-- **Cache benefits**: Second build onwards will be dramatically faster!
-
-### 🏗 Build Architecture
-```
-Base System (cached) ──→ Tools Install (cached) ──→ Config Files (frequent changes)
-    ~2 minutes              ~2 minutes                   ~5 seconds
-```
 
 ## 🔐 GitHub Authentication & Commit Signing
 
