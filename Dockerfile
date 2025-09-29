@@ -51,7 +51,6 @@ RUN git clone https://aur.archlinux.org/yay.git /tmp/yay && \
     rm -rf /tmp/yay && \
     yay -Syu --noconfirm
 
-COPY --chown=$USERNAME:$USERNAME configs/ /home/$USERNAME/
 FROM base-system AS tools-installer
 
 COPY --chown=$USERNAME:$USERNAME scripts/install-additional-tools.sh /tmp/

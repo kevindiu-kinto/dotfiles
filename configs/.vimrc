@@ -102,4 +102,3 @@ set autoread
 
 " Persistent undo
 set undofile
-set undodir=~/.vim/undodir
