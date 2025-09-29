@@ -11,7 +11,6 @@ plugins=(
     tmux
     docker
     docker-compose
-    ssh-agent
     zsh-autosuggestions
     zsh-syntax-highlighting
 )
@@ -62,6 +61,11 @@ mkcd() {
 # History configuration
 HISTSIZE=10000
 SAVEHIST=10000
+
+# SSH Agent configuration (container-friendly)
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    eval "$(ssh-agent -s)" > /dev/null 2>&1
+fi
 
 # Welcome message
 echo "🚀 Development environment ready!"
