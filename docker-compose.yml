@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  dev-env:
+    build: .
+    container_name: dev-environment
+    ports:
+      - "2222:22"  # SSH access for VS Code Remote
+      - "8080:8080"  # Common web dev port
+      - "3000:3000"  # React/Node.js dev server
+      - "9000:9000"  # Additional dev port
+    volumes:
+      # Mount your source code directory
+      - ./workspace:/workspace
+      # Mount configuration files (read-only to preserve host configs)
+      - ./configs/.vimrc:/home/dev/.vimrc:ro
+      - ./configs/.zshrc:/home/dev/.zshrc:ro
+      - ./configs/.tmux.conf:/home/dev/.tmux.conf:ro
+      - ./configs/.gitconfig:/home/dev/.gitconfig:ro
+      # Mount SSH keys (if you have them)
+      - ~/.ssh:/home/dev/.ssh:ro
+      # Mount Go module cache to speed up builds
+      - go-mod-cache:/go/pkg/mod
+      # Persist zsh history
+      - zsh-history:/home/dev/.zsh_history_data
+    environment:
+      - GOPROXY=https://proxy.golang.org,direct
+      - GOSUMDB=sum.golang.org
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+volumes:
+  go-mod-cache:
+  zsh-history:

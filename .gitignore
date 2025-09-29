@@ -1,0 +1,42 @@
+# Docker and Docker Compose
+.dockerignore
+docker-compose.override.yml
+
+# IDE
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.swp
+*.swo
+*~
+
+# Personal SSH keys (if accidentally copied)
+configs/.ssh/id_*
+configs/.ssh/known_hosts
+
+# Personal Git config (template provided)
+configs/.gitconfig.personal
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Local development files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
