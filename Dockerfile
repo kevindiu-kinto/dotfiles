@@ -1,6 +1,10 @@
 # Development Environment - Arch Linux based
 FROM --platform=linux/amd64 archlinux:latest
 
+# Build argument for cache busting
+ARG BUILD_DATE
+ENV BUILD_DATE=${BUILD_DATE}
+
 # Set environment variables
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
@@ -12,9 +16,11 @@ ARG USERNAME=dev
 ARG USER_UID=1000
 ARG USER_GID=1000
 
-# Update system and install base packages
-RUN pacman -Syu --noconfirm && \
-    pacman -S --noconfirm \
+# Update package database first (separate layer for better caching)
+RUN pacman -Sy --noconfirm
+
+# Install base packages (cached layer if no package changes)
+RUN pacman -S --noconfirm \
         base-devel \
         git \
         curl \
@@ -32,8 +38,11 @@ RUN pacman -Syu --noconfirm && \
         gzip \
         ca-certificates
 
-# Install Go (latest stable)
+# Install Go (separate layer for better caching)
 RUN pacman -S --noconfirm go
+
+# Update all packages to latest versions (this layer will rebuild when packages update)
+RUN pacman -Syu --noconfirm
 
 # Create user and setup sudo
 RUN groupadd --gid $USER_GID $USERNAME && \
@@ -47,12 +56,13 @@ WORKDIR /home/$USERNAME
 # Install Oh My Zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
-# Install yay (AUR helper)
+# Install yay (AUR helper) - separate layer for better caching
 RUN git clone https://aur.archlinux.org/yay.git /tmp/yay && \
     cd /tmp/yay && \
     makepkg -si --noconfirm && \
     cd / && \
-    rm -rf /tmp/yay
+    rm -rf /tmp/yay && \
+    yay -Syu --noconfirm
 
 # Copy configuration files
 COPY --chown=$USERNAME:$USERNAME configs/ /home/$USERNAME/

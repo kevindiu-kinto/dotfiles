@@ -1,6 +1,10 @@
 services:
   dev-env:
-    build: .
+    build: 
+      context: .
+      # Add build args for cache busting when needed
+      args:
+        - BUILD_DATE=${BUILD_DATE:-}
     container_name: dev-environment
     ports:
       - "2222:22"  # SSH access for VS Code Remote

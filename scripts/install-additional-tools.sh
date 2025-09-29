@@ -161,6 +161,10 @@ setup_directories() {
 main() {
     echo "🚀 Starting additional tools installation..."
     
+    # Update package databases for fresh packages
+    echo "🔄 Updating package databases..."
+    sudo pacman -Sy --noconfirm
+    
     # Core installations
     install_pacman_tools
     install_aur_tools
@@ -171,6 +175,15 @@ main() {
     # Optional installations (uncomment as needed)
     # install_nodejs_tools
     # install_python_tools
+    
+    # Final system update to ensure everything is latest
+    echo "🔄 Final system update..."
+    sudo pacman -Syu --noconfirm
+    
+    # Clean package cache to reduce image size
+    echo "🧹 Cleaning package cache..."
+    sudo pacman -Scc --noconfirm || true
+    yay -Yc --noconfirm || true
     
     echo "✅ Additional tools installation completed!"
     echo "📝 Note: You may need to restart your shell or run 'source ~/.zshrc' to use new tools"

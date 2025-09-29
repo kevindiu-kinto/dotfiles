@@ -1,6 +1,6 @@
 # Development Environment Dotfiles
 
-A comprehensive Docker-based development environment with Arch Linux, optimized for Go development and general programming tasks.
+A comprehensive Docker-based development environment with Arch Linux, optimized for Go development and general programming tasks. Managed with a convenient Makefile.
 
 ## 🚀 Quick Start
 
@@ -12,18 +12,21 @@ A comprehensive Docker-based development environment with Arch Linux, optimized 
 
 2. Build and start the environment:
    ```bash
-   docker-compose up -d
+   # Quick build with Makefile
+   make build
+
+   # Or see all available commands
+   make help
    ```
 
-3. Connect via SSH (for VS Code Remote):
+3. Connect to your environment:
    ```bash
-   ssh dev@localhost -p 2222
+   # Open shell directly
+   make shell
+
+   # Or connect via SSH (for VS Code Remote)
+   make ssh
    # Password: dev
-   ```
-
-4. Or attach directly to the container:
-   ```bash
-   docker exec -it dev-environment zsh
    ```
 
 ## 📁 Structure
@@ -124,6 +127,15 @@ ports:
 
 ## 📝 Usage Tips
 
+### Quick Commands
+```bash
+make help       # Show all commands
+make build      # Build and start
+make shell      # Open container shell
+make update     # Update packages
+make ssh        # Connect via SSH
+```
+
 ### Tmux Commands
 - `Ctrl+a` - Prefix key
 - `Ctrl+a |` - Split vertically
@@ -156,13 +168,34 @@ ports:
 To update the environment:
 
 ```bash
-# Rebuild the container
-docker-compose build --no-cache
+# Quick update with latest packages
+make update
 
-# Or pull the latest base image
-docker-compose pull
-docker-compose up -d --force-recreate
+# Force complete rebuild (no cache)
+make rebuild
+
+# Clean everything and rebuild fresh
+make fresh
 ```
+
+### Available Commands
+
+Run `make help` to see all available commands:
+
+**Basic:**
+- `make build` - Build and start environment
+- `make start/stop` - Start/stop containers
+- `make restart` - Restart containers
+
+**Maintenance:**
+- `make update` - Update all packages  
+- `make rebuild` - Force rebuild without cache
+- `make clean` - Clean up everything
+
+**Access:**
+- `make shell` - Open container shell
+- `make ssh` - Connect via SSH (for VS Code)
+- `make logs` - Show container logs
 
 ## 🐛 Troubleshooting
 
