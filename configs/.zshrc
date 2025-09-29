@@ -66,9 +66,3 @@ SAVEHIST=10000
 if [ -z "$SSH_AUTH_SOCK" ]; then
     eval "$(ssh-agent -s)" > /dev/null 2>&1
 fi
-
-# Welcome message
-echo "🚀 Development environment ready!"
-echo "📁 Workspace: /workspace"
-echo "🔗 Go workspace: ~/go/src/github.com -> /workspace"
-echo "🔧 Go version: $(go version | cut -d' ' -f3)"
