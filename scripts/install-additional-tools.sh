@@ -7,14 +7,13 @@ set -e
 echo "🔧 Installing additional development tools..."
 
 # Environment variables for controlling installation speed
-SKIP_AUR=${SKIP_AUR:-false}
+SKIP_AUR=${SKIP_AUR:-true}     # Skip AUR by default for speed
 SKIP_GO_TOOLS=${SKIP_GO_TOOLS:-false}
 MINIMAL_BUILD=${MINIMAL_BUILD:-false}
 
 # Function to install tools via pacman
 install_pacman_tools() {
     local tools=(
-        # Add your favorite CLI tools here
         "ripgrep"           # Better grep
         "fd"               # Better find
         "bat"              # Better cat
@@ -25,17 +24,10 @@ install_pacman_tools() {
         "httpie"           # HTTP client
         "ncdu"             # Disk usage analyzer
         "lazygit"          # Git TUI
-        # Add more tools as needed
     )
 
-    for tool in "${tools[@]}"; do
-        if ! command -v "$tool" &> /dev/null; then
-            echo "📦 Installing $tool..."
-            sudo pacman -S --noconfirm "$tool" || echo "❌ Failed to install $tool"
-        else
-            echo "✅ $tool is already installed"
-        fi
-    done
+    echo "📦 Installing all CLI tools in batch..."
+    sudo pacman -S --noconfirm "${tools[@]}" || echo "❌ Some tools failed to install"
 }
 
 # Function to install AUR packages via yay
@@ -73,34 +65,33 @@ install_aur_tools() {
 # Function to install Go tools
 install_go_tools() {
     local go_tools=(
-        # Add your Go development tools here
         "golang.org/x/tools/gopls@latest"                    # Go language server
         "github.com/go-delve/delve/cmd/dlv@latest"          # Go debugger
-        "honnef.co/go/tools/cmd/staticcheck@latest"         # Go static analyzer
-        "github.com/golangci/golangci-lint/cmd/golangci-lint@latest" # Go linter
-        # Add more Go tools as needed
     )
 
-    echo "🐹 Installing Go development tools..."
+    echo "🐹 Installing essential Go tools..."
     for tool in "${go_tools[@]}"; do
-        echo "📦 Installing $(basename ${tool%@*})..."
-        go install "$tool" || echo "❌ Failed to install $tool"
+        go install "$tool" &
     done
+    wait  # Install in parallel
 }
 
 # Function to install additional zsh plugins
 install_zsh_plugins() {
-    echo "🐚 Installing additional zsh plugins..."
+    echo "🐚 Installing zsh plugins in parallel..."
 
-    # zsh-autosuggestions
-    if [ ! -d "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" ]; then
-        git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-    fi
-
-    # zsh-syntax-highlighting
-    if [ ! -d "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]; then
-        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-    fi
+    # Install plugins in parallel
+    {
+        if [ ! -d "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" ]; then
+            git clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+        fi
+    } &
+    {
+        if [ ! -d "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]; then
+            git clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+        fi
+    } &
+    wait
 }
 
 # Function to install Node.js and npm tools (optional)
@@ -202,47 +193,30 @@ setup_persistent_directories() {
 
 # Main execution
 main() {
-    echo "🚀 Starting additional tools installation..."
+    echo "🚀 Starting optimized tools installation..."
 
-    # Update package databases for fresh packages
-    echo "🔄 Updating package databases..."
+    # Single package database update
+    echo "🔄 Updating package database..."
     sudo pacman -Sy --noconfirm
 
-    # Core installations
+    # Install core tools
     install_pacman_tools
 
-    # Skip expensive installations for faster builds
-    if [ "$SKIP_AUR" != "true" ]; then
-        install_aur_tools
-    else
-        echo "⏭️  Skipping AUR tools installation (SKIP_AUR=true)"
-    fi
-
+    # Skip expensive operations for faster builds
     if [ "$SKIP_GO_TOOLS" != "true" ]; then
         install_go_tools
-    else
-        echo "⏭️  Skipping Go tools installation (SKIP_GO_TOOLS=true)"
     fi
 
+    # Install zsh plugins (fast)
     install_zsh_plugins
     setup_directories
     setup_persistent_directories
 
-    # Optional installations (uncomment as needed)
-    # install_nodejs_tools
-    # install_python_tools
-
-    # Final system update to ensure everything is latest
-    echo "🔄 Final system update..."
-    sudo pacman -Syu --noconfirm
-
     # Clean package cache to reduce image size
     echo "🧹 Cleaning package cache..."
     sudo pacman -Scc --noconfirm || true
-    yay -Yc --noconfirm || true
 
-    echo "✅ Additional tools installation completed!"
-    echo "📝 Note: You may need to restart your shell or run 'source ~/.zshrc' to use new tools"
+    echo "✅ Optimized tools installation completed!"
 }
 
 # Run the script
