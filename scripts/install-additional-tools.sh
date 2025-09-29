@@ -155,6 +155,17 @@ setup_directories() {
     mkdir -p ~/go/{bin,src,pkg}
     mkdir -p ~/.vim/undodir
     mkdir -p ~/.config
+    
+    # Setup Go workspace symlink structure
+    echo "🔗 Setting up Go workspace symlinks..."
+    mkdir -p ~/go/src
+    
+    # Create symlink from workspace directly to github.com
+    # This allows /workspace projects to appear as ~/go/src/github.com/project-name
+    if [ ! -L ~/go/src/github.com ]; then
+        ln -sf /workspace ~/go/src/github.com
+        echo "✅ Created symlink: ~/go/src/github.com -> /workspace"
+    fi
 }
 
 # Main execution

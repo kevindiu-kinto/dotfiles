@@ -35,6 +35,7 @@ A comprehensive Docker-based development environment with Arch Linux, optimized 
 dotfiles/
 ├── Dockerfile              # Main container definition
 ├── docker-compose.yml      # Container orchestration
+├── Makefile                # Build and management commands
 ├── configs/                # Configuration files
 │   ├── .vimrc              # Vim configuration
 │   ├── .zshrc              # Zsh configuration
@@ -44,6 +45,23 @@ dotfiles/
 │   └── install-additional-tools.sh  # Additional tools installer
 ├── workspace/              # Your source code goes here
 └── README.md              # This file
+```
+
+### Go Workspace Structure
+
+Inside the container, your workspace is properly linked to Go conventions:
+```
+/workspace                           # Your host directory
+└── ~/go/src/
+    └── github.com -> /workspace    # Direct symlink to workspace
+
+# Example project structure:
+/workspace/
+├── kevindiu-kinto/
+│   ├── my-go-app/              # Appears as ~/go/src/github.com/kevindiu-kinto/my-go-app
+│   └── another-project/        # Appears as ~/go/src/github.com/kevindiu-kinto/another-project
+└── other-user/
+    └── their-project/          # Appears as ~/go/src/github.com/other-user/their-project
 ```
 
 ## 🛠 What's Included
@@ -67,7 +85,7 @@ dotfiles/
 - 📦 **Extensible** - Simple script to add your own tools
 - 🔄 **Persistent** - Data volumes for Go modules and shell history
 - 🔌 **VS Code Ready** - SSH access for Remote development
-- 🐹 **Go Optimized** - Go development tools and configurations
+- 🐹 **Go Optimized** - Proper Go workspace structure with symlinks
 
 ## 🔧 Customization
 
