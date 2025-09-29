@@ -10,8 +10,8 @@ cd dotfiles
 make build          # First time: ~4 minutes, then ~30s with cache
 make shell          # Start coding!
 
-# Daily usage:
-make build          # Uses cache automatically - fast!
+# Maintenance:
+make clean          # Clean cache
 ```
 
 ## 🚀 Quick Start
@@ -208,7 +208,8 @@ The environment includes helpful aliases:
 make build           # Build and start (uses cache automatically)
 make start           # Start existing containers
 make stop            # Stop containers
-make clean           # Clean up everything
+make clean           # Clean cache (safe - preserves your data)
+make rm              # Remove everything including volumes (destructive!)
 make rebuild         # Full rebuild without cache (when broken)
 
 # Access Commands
@@ -269,6 +270,8 @@ make rebuild            # ~4 minutes (fresh start)
 
 ### 🎯 When to Use Each Command
 - **build**: Daily development - builds and starts everything efficiently
+- **clean**: Free up disk space - removes cache but keeps your valuable data
+- **rm**: Nuclear option - removes EVERYTHING including Git credentials, GPG keys (be careful!)
 - **rebuild**: Something is broken, need fresh start (rarely needed)
 - **start/stop**: Control running containers without rebuilding
 
@@ -285,7 +288,28 @@ make rebuild            # ~4 minutes (fresh start)
 
 **Build taking too long?**
 ```bash
-make clean         # Clean everything and start fresh
+make clean         # Clean cache (safe - keeps your data)
+```
+
+**Container won't start?**
+```bash
+make stop          # Stop everything
+make clean         # Clean cache
+make build         # Fresh build
+```
+
+**SSH connection refused?**
+```bash
+# Remove old host key
+ssh-keygen -R "[localhost]:2222"
+# Then try connecting again
+make ssh
+```
+
+**Want to start completely fresh? (⚠️ DESTRUCTIVE)**
+```bash
+make rm            # This will ask for confirmation first
+make build         # Fresh start
 ```
 
 **Container won't start?**
