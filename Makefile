@@ -1,7 +1,7 @@
 # Development Environment Makefile
 # Essential Docker management commands
 
-.PHONY: help build start stop restart clean rebuild update logs shell ssh status down info
+.PHONY: help build start stop clean rebuild logs shell ssh status
 
 # Colors for output
 BLUE := \033[0;34m
@@ -21,15 +21,12 @@ help:
 	@echo ""
 	@printf "\033[1;33mBasic Commands:\033[0m\n"
 	@printf "  \033[0;34mbuild\033[0m      Build and start the development environment\n"
-	@printf "  \033[0;34mstart\033[0m      Start containers\n"
+	@printf "  \033[0;34mstart\033[0m      Start existing containers\n"
 	@printf "  \033[0;34mstop\033[0m       Stop containers\n"
-	@printf "  \033[0;34mrestart\033[0m    Restart containers\n"
-	@printf "  \033[0;34mdown\033[0m       Stop and remove containers\n"
 	@echo ""
 	@printf "\033[1;33mMaintenance:\033[0m\n"
-	@printf "  \033[0;34mrebuild\033[0m    Force rebuild without cache\n"
-	@printf "  \033[0;34mupdate\033[0m     Update all packages and rebuild\n"
-	@printf "  \033[0;34mclean\033[0m      Clean up everything (containers, images, volumes)\n"
+	@printf "  \033[0;34mrebuild\033[0m        Full rebuild without cache (when broken)\n"
+	@printf "  \033[0;34mclean\033[0m          Clean up everything\n"
 	@echo ""
 	@printf "\033[1;33mAccess:\033[0m\n"
 	@printf "  \033[0;34mshell\033[0m      Open shell in container\n"
@@ -39,7 +36,7 @@ help:
 	@echo ""
 
 # Build and start the development environment
-build: 
+build:
 	@echo "$(BLUE)[BUILD]$(NC) Building development environment..."
 	@docker-compose build
 	@$(MAKE) start
@@ -54,15 +51,7 @@ start:
 # Stop containers
 stop:
 	@echo "$(BLUE)[STOP]$(NC) Stopping containers..."
-	@docker-compose stop
-
-# Stop and remove containers
-down:
-	@echo "$(BLUE)[DOWN]$(NC) Stopping and removing containers..."
 	@docker-compose down
-
-# Restart containers
-restart: stop start
 
 # Force rebuild without cache
 rebuild:
@@ -71,18 +60,12 @@ rebuild:
 	@$(MAKE) start
 	@echo "$(GREEN)[SUCCESS]$(NC) Complete rebuild finished!"
 
-# Update all packages and rebuild
-update:
-	@echo "$(BLUE)[UPDATE]$(NC) Updating packages..."
-	@BUILD_DATE=$$(date +%s) docker-compose build
-	@$(MAKE) start
-	@echo "$(GREEN)[SUCCESS]$(NC) Packages updated!"
-
 # Clean up containers, images, and volumes
 clean:
 	@echo "$(YELLOW)[CLEAN]$(NC) Cleaning up everything..."
 	@docker-compose down -v --remove-orphans
 	@docker system prune -f
+	@docker builder prune -f
 	@echo "$(GREEN)[SUCCESS]$(NC) Cleanup complete!"
 
 # Open shell in the container

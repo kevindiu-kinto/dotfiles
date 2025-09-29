@@ -6,6 +6,11 @@ set -e
 
 echo "🔧 Installing additional development tools..."
 
+# Environment variables for controlling installation speed
+SKIP_AUR=${SKIP_AUR:-false}
+SKIP_GO_TOOLS=${SKIP_GO_TOOLS:-false}
+MINIMAL_BUILD=${MINIMAL_BUILD:-false}
+
 # Function to install tools via pacman
 install_pacman_tools() {
     local tools=(
@@ -22,7 +27,7 @@ install_pacman_tools() {
         "lazygit"          # Git TUI
         # Add more tools as needed
     )
-    
+
     for tool in "${tools[@]}"; do
         if ! command -v "$tool" &> /dev/null; then
             echo "📦 Installing $tool..."
@@ -36,7 +41,7 @@ install_pacman_tools() {
 # Function to install AUR packages via yay
 install_aur_tools() {
     echo "🌟 Installing AUR packages with yay..."
-    
+
     local aur_tools=(
         # Add your favorite AUR packages here
         # "visual-studio-code-bin"    # VS Code from AUR
@@ -49,14 +54,14 @@ install_aur_tools() {
         # "github-cli"               # GitHub CLI (if not in main repos)
         # Add more AUR tools as needed
     )
-    
+
     for tool in "${aur_tools[@]}"; do
         if [[ ! "$tool" =~ ^#.* ]]; then  # Skip commented lines
             echo "📦 Installing $tool from AUR..."
             yay -S --noconfirm "$tool" || echo "❌ Failed to install $tool"
         fi
     done
-    
+
     # Show yay usage info
     echo "💡 yay is now available! Usage examples:"
     echo "   yay -S package-name     # Install package from AUR"
@@ -75,7 +80,7 @@ install_go_tools() {
         "github.com/golangci/golangci-lint/cmd/golangci-lint@latest" # Go linter
         # Add more Go tools as needed
     )
-    
+
     echo "🐹 Installing Go development tools..."
     for tool in "${go_tools[@]}"; do
         echo "📦 Installing $(basename ${tool%@*})..."
@@ -86,12 +91,12 @@ install_go_tools() {
 # Function to install additional zsh plugins
 install_zsh_plugins() {
     echo "🐚 Installing additional zsh plugins..."
-    
+
     # zsh-autosuggestions
     if [ ! -d "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" ]; then
         git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
     fi
-    
+
     # zsh-syntax-highlighting
     if [ ! -d "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]; then
         git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
@@ -101,12 +106,12 @@ install_zsh_plugins() {
 # Function to install Node.js and npm tools (optional)
 install_nodejs_tools() {
     echo "📦 Installing Node.js tools (optional)..."
-    
+
     # Install Node.js
     if ! command -v node &> /dev/null; then
         sudo pacman -S --noconfirm nodejs npm
     fi
-    
+
     # Add your favorite npm global packages here
     local npm_tools=(
         # "yarn"
@@ -115,7 +120,7 @@ install_nodejs_tools() {
         # "create-react-app"
         # Add more npm tools as needed
     )
-    
+
     # Uncomment to install npm tools
     # for tool in "${npm_tools[@]}"; do
     #     echo "📦 Installing $tool..."
@@ -126,12 +131,12 @@ install_nodejs_tools() {
 # Function to install Python tools (optional)
 install_python_tools() {
     echo "🐍 Installing Python tools (optional)..."
-    
+
     # Install Python and pip
     if ! command -v python &> /dev/null; then
         sudo pacman -S --noconfirm python python-pip
     fi
-    
+
     # Add your favorite Python packages here
     local python_tools=(
         # "requests"
@@ -141,7 +146,7 @@ install_python_tools() {
         # "pandas"
         # Add more Python tools as needed
     )
-    
+
     # Uncomment to install Python tools
     # for tool in "${python_tools[@]}"; do
     #     echo "📦 Installing $tool..."
@@ -155,11 +160,11 @@ setup_directories() {
     mkdir -p ~/go/{bin,src,pkg}
     mkdir -p ~/.vim/undodir
     mkdir -p ~/.config
-    
+
     # Setup Go workspace symlink structure
     echo "🔗 Setting up Go workspace symlinks..."
     mkdir -p ~/go/src
-    
+
     # Create symlink from workspace directly to github.com
     # This allows /workspace projects to appear as ~/go/src/github.com/project-name
     if [ ! -L ~/go/src/github.com ]; then
@@ -171,59 +176,71 @@ setup_directories() {
 # Setup persistent directories for credentials and configuration
 setup_persistent_directories() {
     echo "🔐 Setting up persistent directories for credentials..."
-    
+
     # Create directories for persistent storage
     mkdir -p /home/dev/.config/gh
     mkdir -p /home/dev/.gnupg
-    
+
     # Set proper permissions for GPG directory
     chmod 700 /home/dev/.gnupg
-    
+
     # Create git credentials directory and file
     mkdir -p /home/dev/.git-credentials-dir
     touch /home/dev/.git-credentials-dir/credentials
     chmod 600 /home/dev/.git-credentials-dir/credentials
-    
+
     # Create symlink for git credentials
     ln -sf /home/dev/.git-credentials-dir/credentials /home/dev/.git-credentials
-    
+
     # Ensure ownership is correct
     sudo chown -R dev:dev /home/dev/.config
     sudo chown -R dev:dev /home/dev/.gnupg
     sudo chown -R dev:dev /home/dev/.git-credentials-dir
-    
+
     echo "✅ Persistent directories setup completed"
 }
 
 # Main execution
 main() {
     echo "🚀 Starting additional tools installation..."
-    
+
     # Update package databases for fresh packages
     echo "🔄 Updating package databases..."
     sudo pacman -Sy --noconfirm
-    
+
     # Core installations
     install_pacman_tools
-    install_aur_tools
-    install_go_tools
+
+    # Skip expensive installations for faster builds
+    if [ "$SKIP_AUR" != "true" ]; then
+        install_aur_tools
+    else
+        echo "⏭️  Skipping AUR tools installation (SKIP_AUR=true)"
+    fi
+
+    if [ "$SKIP_GO_TOOLS" != "true" ]; then
+        install_go_tools
+    else
+        echo "⏭️  Skipping Go tools installation (SKIP_GO_TOOLS=true)"
+    fi
+
     install_zsh_plugins
     setup_directories
     setup_persistent_directories
-    
+
     # Optional installations (uncomment as needed)
     # install_nodejs_tools
     # install_python_tools
-    
+
     # Final system update to ensure everything is latest
     echo "🔄 Final system update..."
     sudo pacman -Syu --noconfirm
-    
+
     # Clean package cache to reduce image size
     echo "🧹 Cleaning package cache..."
     sudo pacman -Scc --noconfirm || true
     yay -Yc --noconfirm || true
-    
+
     echo "✅ Additional tools installation completed!"
     echo "📝 Note: You may need to restart your shell or run 'source ~/.zshrc' to use new tools"
 }

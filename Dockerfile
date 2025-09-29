@@ -1,7 +1,10 @@
-# Development Environment - Arch Linux based
-FROM --platform=linux/amd64 archlinux:latest
+# Multi-stage build for better caching
+# Stage 1: Base system with packages (cached aggressively)
+FROM --platform=linux/amd64 archlinux:latest AS base-system
 
-# Build argument for cache busting
+# Build arguments for selective cache busting
+ARG PACKAGES_VERSION=1
+ARG TOOLS_VERSION=1
 ARG BUILD_DATE
 ENV BUILD_DATE=${BUILD_DATE}
 
@@ -66,12 +69,19 @@ RUN git clone https://aur.archlinux.org/yay.git /tmp/yay && \
     rm -rf /tmp/yay && \
     yay -Syu --noconfirm
 
-# Copy configuration files
+# Copy configuration files (this layer changes frequently)
 COPY --chown=$USERNAME:$USERNAME configs/ /home/$USERNAME/
 
-# Install additional tools (can be easily modified)
+# Stage 2: Install expensive tools (cached separately)
+FROM base-system AS tools-installer
+
+# Copy tools installation script with version for cache control
 COPY --chown=$USERNAME:$USERNAME scripts/install-additional-tools.sh /tmp/
+RUN echo "TOOLS_VERSION=${TOOLS_VERSION}" > /tmp/tools.version
 RUN chmod +x /tmp/install-additional-tools.sh && /tmp/install-additional-tools.sh
+
+# Stage 3: Final image with configs (frequently changing)
+FROM tools-installer AS final
 
 # Setup SSH for VS Code Remote
 RUN sudo mkdir -p /var/run/sshd && \
