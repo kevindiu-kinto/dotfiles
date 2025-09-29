@@ -179,14 +179,18 @@ setup_persistent_directories() {
     # Set proper permissions for GPG directory
     chmod 700 /home/dev/.gnupg
     
-    # Create git credentials file
-    touch /home/dev/.git-credentials
-    chmod 600 /home/dev/.git-credentials
+    # Create git credentials directory and file
+    mkdir -p /home/dev/.git-credentials-dir
+    touch /home/dev/.git-credentials-dir/credentials
+    chmod 600 /home/dev/.git-credentials-dir/credentials
+    
+    # Create symlink for git credentials
+    ln -sf /home/dev/.git-credentials-dir/credentials /home/dev/.git-credentials
     
     # Ensure ownership is correct
     sudo chown -R dev:dev /home/dev/.config
     sudo chown -R dev:dev /home/dev/.gnupg
-    sudo chown dev:dev /home/dev/.git-credentials
+    sudo chown -R dev:dev /home/dev/.git-credentials-dir
     
     echo "✅ Persistent directories setup completed"
 }

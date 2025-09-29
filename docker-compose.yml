@@ -27,8 +27,8 @@ services:
       - zsh-history:/home/dev/.zsh_history_data
       # Persist GitHub CLI configuration and credentials
       - gh-config:/home/dev/.config/gh
-      # Persist Git credentials and configuration
-      - git-credentials:/home/dev/.git-credentials
+      # Persist Git credentials directory
+      - git-credentials:/home/dev/.git-credentials-dir
       # Persist GPG keys for commit signing
       - gnupg-config:/home/dev/.gnupg
     environment:
