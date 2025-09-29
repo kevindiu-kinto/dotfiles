@@ -68,6 +68,16 @@ alias tma='tmux attach'
 alias tmn='tmux new-session'
 alias tms='tmux list-sessions'
 
+# Yay aliases (AUR helper)
+alias y='yay'
+alias ys='yay -S'          # Install package
+alias yss='yay -Ss'        # Search packages
+alias yu='yay -Syu'        # Update system and AUR
+alias yr='yay -R'          # Remove package
+alias yc='yay -Yc'         # Clean dependencies
+alias yq='yay -Q'          # List installed packages
+alias yqi='yay -Qi'        # Package info
+
 # Custom functions
 mkcd() {
     mkdir -p "$@" && cd "$_";
@@ -80,6 +90,19 @@ killport() {
         return 1
     fi
     lsof -ti:$1 | xargs kill -9
+}
+
+# Show yay usage examples
+yay-help() {
+    echo "🌟 Quick yay Commands:"
+    echo "  ys package    # Install package"
+    echo "  yss search    # Search packages" 
+    echo "  yu           # Update all packages"
+    echo "  yr package   # Remove package"
+    echo "  yc           # Clean dependencies"
+    echo "  yq           # List installed packages"
+    echo ""
+    echo "Run '/workspace/yay-examples.sh' for more examples!"
 }
 
 # Git branch in prompt (if not using oh-my-zsh theme that includes it)

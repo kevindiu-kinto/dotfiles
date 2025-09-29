@@ -1,5 +1,5 @@
 # Development Environment - Arch Linux based
-FROM archlinux:latest
+FROM --platform=linux/amd64 archlinux:latest
 
 # Set environment variables
 ENV LANG=en_US.UTF-8
@@ -47,6 +47,13 @@ WORKDIR /home/$USERNAME
 # Install Oh My Zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
+# Install yay (AUR helper)
+RUN git clone https://aur.archlinux.org/yay.git /tmp/yay && \
+    cd /tmp/yay && \
+    makepkg -si --noconfirm && \
+    cd / && \
+    rm -rf /tmp/yay
+
 # Copy configuration files
 COPY --chown=$USERNAME:$USERNAME configs/ /home/$USERNAME/
 
@@ -56,6 +63,7 @@ RUN chmod +x /tmp/install-additional-tools.sh && /tmp/install-additional-tools.s
 
 # Setup SSH for VS Code Remote
 RUN sudo mkdir -p /var/run/sshd && \
+    sudo ssh-keygen -A && \
     sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
     sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
     echo "$USERNAME:dev" | sudo chpasswd

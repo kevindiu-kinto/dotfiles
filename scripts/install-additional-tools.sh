@@ -33,6 +33,38 @@ install_pacman_tools() {
     done
 }
 
+# Function to install AUR packages via yay
+install_aur_tools() {
+    echo "🌟 Installing AUR packages with yay..."
+    
+    local aur_tools=(
+        # Add your favorite AUR packages here
+        # "visual-studio-code-bin"    # VS Code from AUR
+        # "google-chrome"             # Chrome browser
+        # "slack-desktop"             # Slack
+        # "discord"                   # Discord
+        # "postman-bin"              # API testing tool
+        # "insomnia-bin"             # REST client
+        # "dbeaver"                  # Database tool
+        # "github-cli"               # GitHub CLI (if not in main repos)
+        # Add more AUR tools as needed
+    )
+    
+    for tool in "${aur_tools[@]}"; do
+        if [[ ! "$tool" =~ ^#.* ]]; then  # Skip commented lines
+            echo "📦 Installing $tool from AUR..."
+            yay -S --noconfirm "$tool" || echo "❌ Failed to install $tool"
+        fi
+    done
+    
+    # Show yay usage info
+    echo "💡 yay is now available! Usage examples:"
+    echo "   yay -S package-name     # Install package from AUR"
+    echo "   yay -Ss search-term     # Search AUR packages"
+    echo "   yay -Syu               # Update system and AUR packages"
+    echo "   yay -Yc                # Clean unneeded dependencies"
+}
+
 # Function to install Go tools
 install_go_tools() {
     local go_tools=(
@@ -131,6 +163,7 @@ main() {
     
     # Core installations
     install_pacman_tools
+    install_aur_tools
     install_go_tools
     install_zsh_plugins
     setup_directories

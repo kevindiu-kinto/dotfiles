@@ -56,6 +56,7 @@ dotfiles/
 - **Go** (latest stable) - Go programming language
 - **Git** - Version control
 - **Docker** client - Container management
+- **yay** - AUR helper for additional packages
 - Various CLI tools (ripgrep, fd, bat, fzf, etc.)
 
 ### Key Features
@@ -71,11 +72,22 @@ dotfiles/
 
 Edit `scripts/install-additional-tools.sh` to add your favorite tools:
 
+**For official Arch packages:**
 ```bash
-# Add to the tools array
+# Add to the pacman tools array
 local tools=(
     "your-tool-name"
     "another-tool"
+)
+```
+
+**For AUR packages:**
+```bash
+# Add to the AUR tools array
+local aur_tools=(
+    "visual-studio-code-bin"
+    "google-chrome"
+    "your-aur-package"
 )
 ```
 
@@ -130,6 +142,14 @@ ports:
 - `gc` - git commit
 - `gp` - git push
 - `gl` - git pull
+
+### Yay (AUR) Commands
+- `y` - yay (shortcut)
+- `ys package` - Install package from AUR
+- `yss term` - Search AUR packages
+- `yu` - Update system and AUR packages
+- `yr package` - Remove package
+- `yc` - Clean unneeded dependencies
 
 ## 🔄 Updates
 
