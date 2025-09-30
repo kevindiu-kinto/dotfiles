@@ -18,8 +18,8 @@ services:
       - ./configs/.vimrc:/home/dev/.vimrc:ro
       - ./configs/.zshrc:/home/dev/.zshrc:ro
       - ./configs/.tmux.conf:/home/dev/.tmux.conf:ro
-      # Mount SSH keys (if you have them)
-      - ~/.ssh:/home/dev/.ssh:ro
+      # Persist SSH configuration and keys
+      - ssh-config:/home/dev/.ssh
       # Mount Go module cache to speed up builds
       - go-mod-cache:/go/pkg/mod
       # Persist zsh history
@@ -46,3 +46,4 @@ volumes:
   git-credentials:
   gnupg-config:
   git-config:
+  ssh-config:

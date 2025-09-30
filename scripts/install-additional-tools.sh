@@ -171,8 +171,10 @@ setup_persistent_directories() {
     # Create directories for persistent storage
     mkdir -p /home/dev/.config/gh
     mkdir -p /home/dev/.gnupg
+    mkdir -p /home/dev/.ssh
 
-    # Set proper permissions for GPG directory
+    # Set proper permissions for SSH and GPG directories
+    chmod 700 /home/dev/.ssh
     chmod 700 /home/dev/.gnupg
 
     # Create git credentials directory and file
@@ -192,6 +194,7 @@ setup_persistent_directories() {
     sudo chown -R dev:dev /home/dev/.gnupg
     sudo chown -R dev:dev /home/dev/.git-credentials-dir
     sudo chown -R dev:dev /home/dev/.git-config-volume
+    sudo chown -R dev:dev /home/dev/.ssh
 
     echo "✅ Persistent directories setup completed"
 }
