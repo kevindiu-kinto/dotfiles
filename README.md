@@ -1,6 +1,6 @@
 # Development Environment Dotfiles
 
-A comprehensive Docker-based development environment with Arch Linux, optimized for Go development and general programming tasks. Features **lightning-fast builds** with intelligent caching.
+A comprehensive Docker-based development environment with Arch Linux, optimized for Go development and general programming tasks. Features **lightning-fast builds** with intelligent caching and **automated container entry**.
 
 ## ⚡ TL;DR - Get Started in 30 Seconds
 
@@ -8,6 +8,10 @@ A comprehensive Docker-based development environment with Arch Linux, optimized 
 git clone https://github.com/kevindiu-kinto/dotfiles.git
 cd dotfiles
 make build
+make install        # Auto-enter container on terminal open
+# Open new terminal → Automatically in container!
+
+# Manual entry:
 make shell          # Start coding!
 
 # Maintenance:
@@ -31,10 +35,16 @@ make clean          # Clean cache
    make help
    ```
 
-3. Connect to your environment:
+3. **Enable auto-container entry (Recommended):**
+   ```bash
+   make install        # Sets up automatic container entry
+   # Now opening any terminal will auto-enter the container!
+   ```
+
+4. Connect to your environment:
    ```bash
    # Open shell directly
-   make shell
+   make shell          # Use 'exit' to return to host terminal
 
    # Or connect via SSH (for VS Code Remote)
    make ssh
@@ -81,23 +91,28 @@ The container automatically sets up a proper Go workspace:
 - **SSH** - For VS Code Remote development
 
 ### Development Tools
-- **Go** (latest stable) - Go programming language
+- **Go** (latest stable) - Go programming language with integrated caching
 - **Git** - Version control
 - **GitHub CLI** - GitHub command line interface
 - **GPG** - For commit signing
 - **Docker CLI** - Container management with Docker-in-Docker support
 - **Docker Compose** - Multi-container application orchestration
+- **AWS CLI** - Amazon Web Services command line interface
+- **Terraform** (via tfenv) - Infrastructure as code tool with version management
 - **yay** - AUR helper for additional packages
 - Various CLI tools (ripgrep, fd, bat, fzf, etc.)
 
 ### Key Features
 - ⚡ **Lightning Fast** - Multi-stage caching (5s config updates, 30s builds)
+- 🚀 **Auto-Entry** - Automatically enter container when opening terminal (`make install`)
+- 🎯 **Go Cache Integration** - 444MB+ of cached Go modules and binaries for instant builds
 - 🔧 **Easy to modify** - Well-structured configuration files
 - 📦 **Extensible** - Simple script to add your own tools
-- 🔄 **Persistent** - Volumes for Go modules, shell histories (zsh/bash), GitHub auth, GPG keys, SSH config, Docker config
+- 🔄 **Persistent** - 10 volumes for complete data persistence (Go cache, AWS config, shell histories, etc.)
 - 🔌 **VS Code Ready** - SSH access for Remote development
-- 🐹 **Go Optimized** - Proper Go workspace structure with symlinks
+- 🐹 **Go Optimized** - Proper Go workspace structure with symlinks and persistent cache
 - 🔐 **GitHub Ready** - Persistent GitHub CLI authentication and GPG signing
+- ☁️ **Cloud Ready** - AWS CLI and Terraform pre-installed with persistent configuration
 - 🐳 **Docker-in-Docker** - Full Docker support for containerized development
 - 🧹 **Self-contained** - Everything managed through a single Makefile
 
@@ -164,7 +179,7 @@ This environment provides persistent storage for GitHub credentials and GPG keys
 ### Persistent Storage
 
 Your credentials and configurations are automatically persisted in Docker volumes:
-- `go-mod-cache` - Go module cache for faster builds
+- `go-cache` - **Integrated Go cache** for modules, binaries, and workspace (444MB+ cached)
 - `zsh-history` - Zsh shell command history
 - `bash-history` - Bash shell command history
 - `gh-config` - GitHub CLI authentication
@@ -175,7 +190,7 @@ Your credentials and configurations are automatically persisted in Docker volume
 - `ssh-config` - SSH keys, config, and known_hosts
 - `docker-config` - Docker CLI configuration and registry credentials
 
-After container rebuilds, all your authentication, keys, and configurations will be retained!
+After container rebuilds, all your authentication, keys, configurations, and **Go development cache** will be retained!
 
 ## 🐳 Docker-in-Docker Support
 
@@ -222,7 +237,36 @@ The environment includes helpful aliases:
 - `ghpv` - View GitHub pull request (`gh pr view`)
 - `ghpl` - List GitHub pull requests (`gh pr list`)
 
-## 🔌 VS Code Integration
+## � **Auto-Container Entry** (New!)
+
+Skip manual `make shell` commands! Set up automatic container entry:
+
+```bash
+make install        # One-time setup
+```
+
+**What it does:**
+- Automatically detects your shell (zsh/bash)
+- Adds smart auto-entry code to your shell config
+- Opening any terminal automatically enters the development container
+- Only activates when container is running
+- Prevents duplicate installations
+
+**Benefits:**
+- **Seamless workflow** - Just open terminal and you're coding
+- **Smart detection** - Works with zsh, bash, or bash_profile
+- **Safe** - Won't break existing configurations
+- **Easy exit** - Simply type `exit` to return to host terminal
+
+### Manual Container Access
+
+If you prefer manual control:
+```bash
+make shell          # Enter container manually (use 'exit' to return)
+make ssh            # SSH access for VS Code
+```
+
+## � VS Code Integration
 
 1. Install the "Remote - SSH" extension in VS Code
 2. Add this to your SSH config (`~/.ssh/config`):
@@ -234,12 +278,13 @@ The environment includes helpful aliases:
    ```
 3. Connect via Command Palette: "Remote-SSH: Connect to Host" → "dev-environment"
 
-## 📝 Complete Command Reference
+## �📝 Complete Command Reference
 
-### 🏗️ Commands
+### 🏗️ Build & Setup Commands
 ```bash
 # Essential Commands
 make build           # Build and start (uses cache automatically)
+make install         # Set up auto-container entry (recommended!)
 make start           # Start existing containers
 make stop            # Stop containers
 make clean           # Clean cache (safe - preserves your data)
@@ -254,15 +299,6 @@ make status          # Show container status
 make help            # Show all available commands
 ```
 
-
-
-# Access Commands
-make shell          # Open shell in container
-make ssh            # Connect via SSH (for VS Code)
-make logs           # Show container logs
-make status         # Show container status
-make help           # Show all available commands
-```
 
 ### Tmux Commands
 - `Ctrl+a` - Prefix key
@@ -294,15 +330,24 @@ make help           # Show all available commands
 ```bash
 # First time setup
 make build              # ~4 minutes (one-time)
+make install            # Set up auto-container entry
 
-# Daily development
+# Daily development (with auto-entry)
+# Just open terminal → Automatically in container!
+
+# Daily development (manual)
 make build              # ~30 seconds (uses cache automatically)
 make shell              # Enter development environment
 
 # Inside the container - Go development
 cd ~/go/src/github.com/your-project
-go mod tidy
-go run main.go
+go mod tidy             # Uses persistent Go cache
+go run main.go          # Lightning fast with cached dependencies
+
+# Inside the container - Cloud development
+aws configure           # Persistent AWS config
+terraform init          # Version managed by tfenv
+terraform plan
 
 # Inside the container - Docker development
 docker build -t myapp .
@@ -315,6 +360,7 @@ make rebuild            # ~4 minutes (fresh start)
 
 ### 🎯 When to Use Each Command
 - **build**: Daily development - builds and starts everything efficiently
+- **install**: One-time setup for automatic container entry (highly recommended!)
 - **clean**: Free up disk space - removes cache but keeps your valuable data
 - **rm**: Nuclear option - removes EVERYTHING including Git credentials, GPG keys (be careful!)
 - **rebuild**: Something is broken, need fresh start (rarely needed)
@@ -350,25 +396,9 @@ make rm            # This will ask for confirmation first
 make build         # Fresh start
 ```
 
-**Container won't start?**
+**Can't exit from container?**
 ```bash
-make down          # Stop everything
-make cache-clean   # Clean cache
-make build         # Fresh build
-```
-
-**SSH connection refused?**
-```bash
-# Remove old host key
-ssh-keygen -R "[localhost]:2222"
-# Then try connecting again
-make ssh
-```
-
-**Want to start completely fresh?**
-```bash
-make clean         # Clean everything automatically
-make build         # Fresh start
+exit               # Simply type 'exit' to return to host terminal
 ```
 
 ### Getting Help
@@ -381,4 +411,6 @@ make build         # Fresh start
 
 **Happy coding! 🚀**
 
-*Enjoy your blazingly fast, persistent, and fully-featured development environment!*
+*Enjoy your blazingly fast, auto-entering, persistent, and fully-featured development environment!*
+
+**Pro tip:** Run `make install` for the ultimate seamless development experience - just open a terminal and start coding! Use `exit` to return to host when needed. 🎯

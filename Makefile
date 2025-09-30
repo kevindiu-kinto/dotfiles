@@ -1,7 +1,7 @@
 # Development Environment Makefile
 # Essential Docker management commands
 
-.PHONY: help build start stop clean rebuild logs shell ssh status rm
+.PHONY: help build start stop clean rebuild logs shell ssh status rm install
 
 # Colors for output
 BLUE := \033[0;34m
@@ -82,6 +82,7 @@ rm:
 
 shell:
 	@echo "$(BLUE)[SHELL]$(NC) Opening tmux session with zsh in container..."
+	@echo "$(YELLOW)[TIP]$(NC) Use 'exit' to return to host terminal"
 	@docker exec -it dev-environment tmux new-session -A -s main
 
 install:
@@ -101,7 +102,7 @@ install:
 		echo "  export DOTFILES_AUTO_SHELL_DONE=1" >> "$$SHELL_CONFIG"; \
 		echo "  if docker ps | grep -q dev-environment; then" >> "$$SHELL_CONFIG"; \
 		echo "    echo \"🐳 Auto-entering development container...\"" >> "$$SHELL_CONFIG"; \
-		echo "    cd $(shell pwd) && exec make shell" >> "$$SHELL_CONFIG"; \
+		echo "    cd $(shell pwd) && make shell" >> "$$SHELL_CONFIG"; \
 		echo "  fi" >> "$$SHELL_CONFIG"; \
 		echo "fi" >> "$$SHELL_CONFIG"; \
 		echo "$(GREEN)[INSTALLED]$(NC) Added to $$SHELL_CONFIG"; \
