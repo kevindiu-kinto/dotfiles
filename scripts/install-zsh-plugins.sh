@@ -1,12 +1,9 @@
 #!/bin/bash
-# Zsh plugins installation script
-# Install additional zsh plugins for enhanced shell experience
 
 set -e
 
 echo "🐚 Installing zsh plugins..."
 
-# Install plugins in parallel
 {
     if [ ! -d "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" ]; then
         echo "📦 Installing zsh-autosuggestions..."
@@ -20,7 +17,6 @@ echo "🐚 Installing zsh plugins..."
     fi
 } &
 
-# Wait for all plugins to install
 wait
 
 echo "✅ Zsh plugins installation completed!"
