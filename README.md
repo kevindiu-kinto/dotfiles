@@ -85,7 +85,8 @@ The container automatically sets up a proper Go workspace:
 - **Git** - Version control
 - **GitHub CLI** - GitHub command line interface
 - **GPG** - For commit signing
-- **Docker** client - Container management
+- **Docker CLI** - Container management with Docker-in-Docker support
+- **Docker Compose** - Multi-container application orchestration
 - **yay** - AUR helper for additional packages
 - Various CLI tools (ripgrep, fd, bat, fzf, etc.)
 
@@ -93,10 +94,11 @@ The container automatically sets up a proper Go workspace:
 - ⚡ **Lightning Fast** - Multi-stage caching (5s config updates, 30s builds)
 - 🔧 **Easy to modify** - Well-structured configuration files
 - 📦 **Extensible** - Simple script to add your own tools
-- 🔄 **Persistent** - Volumes for Go modules, shell history, GitHub auth, GPG keys
+- 🔄 **Persistent** - Volumes for Go modules, shell history, GitHub auth, GPG keys, SSH config, Docker config
 - 🔌 **VS Code Ready** - SSH access for Remote development
 - 🐹 **Go Optimized** - Proper Go workspace structure with symlinks
 - 🔐 **GitHub Ready** - Persistent GitHub CLI authentication and GPG signing
+- 🐳 **Docker-in-Docker** - Full Docker support for containerized development
 - 🧹 **Self-contained** - Everything managed through a single Makefile
 
 ## ⚡ Optimized Build System
@@ -161,12 +163,54 @@ This environment provides persistent storage for GitHub credentials and GPG keys
 
 ### Persistent Storage
 
-Your credentials are automatically persisted in Docker volumes:
+Your credentials and configurations are automatically persisted in Docker volumes:
+- `go-mod-cache` - Go module cache for faster builds
+- `zsh-history` - Shell command history
 - `gh-config` - GitHub CLI authentication
 - `git-credentials` - Git credential storage
 - `gnupg-config` - GPG keys and configuration
+- `git-config` - Git configuration (user.name, user.email, etc.)
+- `ssh-config` - SSH keys, config, and known_hosts
+- `docker-config` - Docker CLI configuration and registry credentials
 
-After container rebuilds, your authentication and signing keys will be retained!
+After container rebuilds, all your authentication, keys, and configurations will be retained!
+
+## 🐳 Docker-in-Docker Support
+
+The environment includes full Docker support for containerized development workflows:
+
+### Features
+- **Docker CLI** - Build, run, and manage containers
+- **Docker Compose** - Orchestrate multi-container applications
+- **Host Integration** - Shares Docker daemon with host for efficiency
+- **Persistent Config** - Docker credentials and settings persist across rebuilds
+
+### Usage Examples
+```bash
+# Inside the development environment
+make shell
+
+# Build Docker images
+docker build -t myapp .
+
+# Run containers
+docker run -d --name web nginx
+docker ps
+
+# Use Docker Compose
+docker-compose up -d
+docker-compose logs
+
+# Manage images
+docker images
+docker pull postgres:latest
+```
+
+### Common Workflows
+- **Microservices Development** - Build and test multiple services
+- **CI/CD Pipeline Development** - Test Docker builds locally
+- **Container Orchestration** - Develop Docker Compose applications
+- **Database Testing** - Spin up databases in containers for testing
 
 ### Useful Aliases
 
@@ -251,6 +295,17 @@ make build              # ~4 minutes (one-time)
 
 # Daily development
 make build              # ~30 seconds (uses cache automatically)
+make shell              # Enter development environment
+
+# Inside the container - Go development
+cd ~/go/src/github.com/your-project
+go mod tidy
+go run main.go
+
+# Inside the container - Docker development
+docker build -t myapp .
+docker run --rm myapp
+docker-compose up -d
 
 # When things break
 make rebuild            # ~4 minutes (fresh start)
@@ -262,13 +317,6 @@ make rebuild            # ~4 minutes (fresh start)
 - **rm**: Nuclear option - removes EVERYTHING including Git credentials, GPG keys (be careful!)
 - **rebuild**: Something is broken, need fresh start (rarely needed)
 - **start/stop**: Control running containers without rebuilding
-
-## 🏆 Performance Comparison
-
-| Operation | Before Optimization | After Optimization | Improvement |
-|-----------|--------------------|--------------------|-------------|
-| Regular builds | ~4 minutes | ~30 seconds | **87% faster** |
-| Cache management | Manual | Automatic | **Built-in** |
 
 ## 🔧 Troubleshooting
 

@@ -8,23 +8,25 @@ echo "🔧 Installing additional development tools..."
 
 # Function to install tools via pacman
 install_pacman_tools() {
-    local tools=(
-        "ripgrep"           # Better grep
-        "fd"               # Better find
-        "bat"              # Better cat
-        "exa"              # Better ls
-        "fzf"              # Fuzzy finder
-        "jq"               # JSON processor
-        "yq"               # YAML processor
-        "httpie"           # HTTP client
-        "ncdu"             # Disk usage analyzer
-        "lazygit"          # Git TUI
-        "docker"           # Docker CLI
-        "docker-compose"   # Docker Compose
-    )
-
-    echo "📦 Installing all CLI tools in batch..."
-    sudo pacman -S --noconfirm "${tools[@]}" || echo "❌ Some tools failed to install"
+    echo "📦 Installing CLI tools in parallel categories..."
+    
+    # Install tools in parallel categories for faster installation
+    {
+        echo "🔍 Installing search and file tools..."
+        sudo pacman -S --noconfirm --needed ripgrep fd bat exa fzf &
+    }
+    {
+        echo "🔧 Installing data processing tools..."
+        sudo pacman -S --noconfirm --needed jq yq httpie ncdu &
+    }
+    {
+        echo "🐳 Installing development tools..."
+        sudo pacman -S --noconfirm --needed lazygit docker docker-compose &
+    }
+    
+    # Wait for all parallel installations to complete
+    wait
+    echo "✅ All CLI tools installed successfully"
 }
 
 # Function to install AUR packages via yay
@@ -229,11 +231,7 @@ setup_docker_permissions() {
 main() {
     echo "🚀 Starting optimized tools installation..."
 
-    # Single package database update
-    echo "🔄 Updating package database..."
-    sudo pacman -Sy --noconfirm
-
-    # Install core tools
+    # Install core tools (skip database update - already done in base-system)
     install_pacman_tools
 
     # Install Go tools
