@@ -2,43 +2,29 @@ services:
   dev-env:
     build:
       context: .
-      # Add build args for cache busting when needed
       args:
         - BUILD_DATE=${BUILD_DATE:-}
     container_name: dev-environment
     ports:
-      - "2222:22"  # SSH access for VS Code Remote
-      - "8080:8080"  # Common web dev port
-      - "3000:3000"  # React/Node.js dev server
-      - "9000:9000"  # Additional dev port
+      - "2222:22"
+      - "8080:8080"
+      - "3000:3000"
+      - "9000:9000"
     volumes:
-      # Mount your source code directory
       - ./workspace:/workspace
-      # Mount configuration files (read-only to preserve host configs)
       - ./configs/.vimrc:/home/dev/.vimrc:ro
       - ./configs/.zshrc:/home/dev/.zshrc:ro
       - ./configs/.tmux.conf:/home/dev/.tmux.conf:ro
-      # Persist SSH configuration and keys
       - ssh-config:/home/dev/.ssh
-      # Mount Go module cache to speed up builds
-      - go-mod-cache:/go/pkg/mod
-      # Persist zsh history
+      - go-mod-cache:/home/dev/go/pkg/mod
       - zsh-history:/home/dev/.zsh_history_data
-      # Persist bash history
       - bash-history:/home/dev/.bash_history_data
-      # Persist GitHub CLI configuration and credentials
       - gh-config:/home/dev/.config/gh
-      # Persist AWS CLI configuration and credentials
       - aws-config:/home/dev/.aws
-      # Persist Git credentials directory
       - git-credentials:/home/dev/.git-credentials-dir
-      # Persist GPG keys for commit signing
       - gnupg-config:/home/dev/.gnupg
-      # Persist git configuration
       - git-config:/home/dev/.git-config-volume
-      # Docker socket for Docker-in-Docker
       - /var/run/docker.sock:/var/run/docker.sock
-      # Persist Docker configuration and credentials
       - docker-config:/home/dev/.docker
     environment:
       - GOPROXY=https://proxy.golang.org,direct
