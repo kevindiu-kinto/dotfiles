@@ -16,7 +16,7 @@ services:
       - ./configs/.zshrc:/home/dev/.zshrc:ro
       - ./configs/.tmux.conf:/home/dev/.tmux.conf:ro
       - ssh-config:/home/dev/.ssh
-      - go-mod-cache:/home/dev/go/pkg/mod
+      - go-cache:/home/dev/go
       - zsh-history:/home/dev/.zsh_history_data
       - bash-history:/home/dev/.bash_history_data
       - gh-config:/home/dev/.config/gh
@@ -34,7 +34,7 @@ services:
     restart: unless-stopped
 
 volumes:
-  go-mod-cache:
+  go-cache:
   zsh-history:
   bash-history:
   gh-config:
