@@ -51,12 +51,31 @@ RUN git clone https://aur.archlinux.org/yay.git /tmp/yay && \
     rm -rf /tmp/yay && \
     yay -Syu --noconfirm
 
-FROM base-system AS tools-installer
+FROM base-system AS pacman-tools
 
-COPY --chown=$USERNAME:$USERNAME scripts/install-additional-tools.sh /tmp/
-RUN echo "TOOLS_VERSION=${TOOLS_VERSION}" > /tmp/tools.version
-RUN chmod +x /tmp/install-additional-tools.sh && /tmp/install-additional-tools.sh
-FROM tools-installer AS final
+# Install CLI tools via pacman (most stable layer)
+COPY --chown=$USERNAME:$USERNAME scripts/install-pacman-tools.sh /tmp/
+RUN chmod +x /tmp/install-pacman-tools.sh && /tmp/install-pacman-tools.sh
+
+FROM pacman-tools AS go-tools
+
+# Install Go development tools (changes when adding new Go tools)
+COPY --chown=$USERNAME:$USERNAME scripts/install-go-tools.sh /tmp/
+RUN chmod +x /tmp/install-go-tools.sh && /tmp/install-go-tools.sh
+
+FROM go-tools AS zsh-plugins
+
+# Install zsh plugins (changes when adding new plugins)
+COPY --chown=$USERNAME:$USERNAME scripts/install-zsh-plugins.sh /tmp/
+RUN chmod +x /tmp/install-zsh-plugins.sh && /tmp/install-zsh-plugins.sh
+
+FROM zsh-plugins AS directory-setup
+
+# Setup directories and permissions (changes with config updates)
+COPY --chown=$USERNAME:$USERNAME scripts/setup-directories.sh /tmp/
+RUN chmod +x /tmp/setup-directories.sh && /tmp/setup-directories.sh
+
+FROM directory-setup AS final
 
 RUN sudo mkdir -p /var/run/sshd && \
     sudo ssh-keygen -A && \
