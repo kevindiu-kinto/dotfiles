@@ -32,6 +32,10 @@ services:
       - gnupg-config:/home/dev/.gnupg
       # Persist git configuration
       - git-config:/home/dev/.git-config-volume
+      # Docker socket for Docker-in-Docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Persist Docker configuration and credentials
+      - docker-config:/home/dev/.docker
     environment:
       - GOPROXY=https://proxy.golang.org,direct
       - GOSUMDB=sum.golang.org
@@ -47,3 +51,4 @@ volumes:
   gnupg-config:
   git-config:
   ssh-config:
+  docker-config:

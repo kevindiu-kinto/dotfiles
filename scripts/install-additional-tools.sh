@@ -24,6 +24,8 @@ install_pacman_tools() {
         "httpie"           # HTTP client
         "ncdu"             # Disk usage analyzer
         "lazygit"          # Git TUI
+        "docker"           # Docker CLI
+        "docker-compose"   # Docker Compose
     )
 
     echo "📦 Installing all CLI tools in batch..."
@@ -172,6 +174,7 @@ setup_persistent_directories() {
     mkdir -p /home/dev/.config/gh
     mkdir -p /home/dev/.gnupg
     mkdir -p /home/dev/.ssh
+    mkdir -p /home/dev/.docker
 
     # Set proper permissions for SSH and GPG directories
     chmod 700 /home/dev/.ssh
@@ -195,8 +198,36 @@ setup_persistent_directories() {
     sudo chown -R dev:dev /home/dev/.git-credentials-dir
     sudo chown -R dev:dev /home/dev/.git-config-volume
     sudo chown -R dev:dev /home/dev/.ssh
+    sudo chown -R dev:dev /home/dev/.docker
 
     echo "✅ Persistent directories setup completed"
+}
+
+# Setup Docker permissions
+setup_docker_permissions() {
+    echo "🐳 Setting up Docker permissions..."
+    
+    # Get the group ID of the Docker socket
+    DOCKER_SOCK_GID=$(stat -c '%g' /var/run/docker.sock 2>/dev/null || echo "0")
+    echo "Docker socket group ID: $DOCKER_SOCK_GID"
+    
+    # Add dev user to the socket owner group (usually root on macOS/OrbStack)
+    if [ "$DOCKER_SOCK_GID" = "0" ]; then
+        # Socket owned by root group, add user to root group
+        sudo usermod -aG root dev
+        echo "Added dev user to root group for Docker socket access"
+    else
+        # Create or modify docker group to match the socket's group ID
+        if getent group docker > /dev/null 2>&1; then
+            sudo groupmod -g "$DOCKER_SOCK_GID" docker 2>/dev/null || true
+        else
+            sudo groupadd -g "$DOCKER_SOCK_GID" docker 2>/dev/null || true
+        fi
+        sudo usermod -aG docker dev
+        echo "Added dev user to docker group (GID: $DOCKER_SOCK_GID)"
+    fi
+    
+    echo "✅ Docker permissions setup completed"
 }
 
 # Main execution
@@ -219,6 +250,7 @@ main() {
     install_zsh_plugins
     setup_directories
     setup_persistent_directories
+    setup_docker_permissions
 
     # Clean package cache to reduce image size
     echo "🧹 Cleaning package cache..."
