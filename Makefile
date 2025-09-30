@@ -30,7 +30,7 @@ help:
 	@printf "  \033[0;34mrebuild\033[0m        Full rebuild without cache\n"
 	@echo ""
 	@printf "\033[1;33mAccess:\033[0m\n"
-	@printf "  \033[0;34mshell\033[0m      Open shell in container\n"
+	@printf "  \033[0;34mshell\033[0m      Open tmux session with zsh in container\n"
 	@printf "  \033[0;34mssh\033[0m        Connect via SSH (for VS Code)\n"
 	@printf "  \033[0;34mlogs\033[0m       Show container logs\n"
 	@printf "  \033[0;34mstatus\033[0m     Show container status\n"
@@ -80,8 +80,8 @@ rm:
 	fi
 
 shell:
-	@echo "$(BLUE)[SHELL]$(NC) Opening shell in container..."
-	@docker exec -it dev-environment zsh
+	@echo "$(BLUE)[SHELL]$(NC) Opening tmux session with zsh in container..."
+	@docker exec -it dev-environment tmux new-session -A -s main
 
 ssh:
 	@echo "$(BLUE)[SSH]$(NC) Connecting via SSH (password: dev)..."

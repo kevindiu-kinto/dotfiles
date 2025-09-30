@@ -75,8 +75,8 @@ The container automatically sets up a proper Go workspace:
 
 ### Base System
 - **Arch Linux** - Rolling release, latest packages
-- **Zsh** with Oh My Zsh - Enhanced shell experience
-- **Tmux** - Terminal multiplexer
+- **Zsh** with Oh My Zsh - Enhanced shell experience (default)
+- **Tmux** - Terminal multiplexer (auto-starts on SSH)
 - **Vim** with Go plugins - Text editor with Go support
 - **SSH** - For VS Code Remote development
 
@@ -247,7 +247,7 @@ make rm              # Remove everything including volumes (destructive!)
 make rebuild         # Full rebuild without cache (when broken)
 
 # Access Commands
-make shell           # Open shell in container
+make shell           # Open tmux session with zsh in container
 make ssh             # Connect via SSH (for VS Code)
 make logs            # Show container logs
 make status          # Show container status
