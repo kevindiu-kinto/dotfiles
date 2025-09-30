@@ -6,11 +6,6 @@ set -e
 
 echo "🔧 Installing additional development tools..."
 
-# Environment variables for controlling installation speed
-SKIP_AUR=${SKIP_AUR:-true}     # Skip AUR by default for speed
-SKIP_GO_TOOLS=${SKIP_GO_TOOLS:-false}
-MINIMAL_BUILD=${MINIMAL_BUILD:-false}
-
 # Function to install tools via pacman
 install_pacman_tools() {
     local tools=(
@@ -241,10 +236,8 @@ main() {
     # Install core tools
     install_pacman_tools
 
-    # Skip expensive operations for faster builds
-    if [ "$SKIP_GO_TOOLS" != "true" ]; then
-        install_go_tools
-    fi
+    # Install Go tools
+    install_go_tools
 
     # Install zsh plugins (fast)
     install_zsh_plugins
