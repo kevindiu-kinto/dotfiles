@@ -84,7 +84,7 @@ rm:
 shell:
 	@echo "$(BLUE)[SHELL]$(NC) Opening tmux session with zsh in container..."
 	@echo "$(YELLOW)[TIP]$(NC) Use 'exit' to return to host terminal"
-	@docker exec -it dev-environment tmux new-session -A -s main
+	@docker exec -it dev-environment tmux new-session
 
 install:
 	@echo "$(BLUE)[INSTALL]$(NC) Setting up auto-shell..."
