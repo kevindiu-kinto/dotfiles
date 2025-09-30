@@ -26,10 +26,7 @@ RUN pacman -Sy --noconfirm && \
         unzip \
         tar \
         gzip \
-        ca-certificates \
-        github-cli \
-        gnupg \
-        go && \
+        ca-certificates && \
     pacman -Scc --noconfirm
 
 RUN groupadd --gid $USER_GID $USERNAME && \

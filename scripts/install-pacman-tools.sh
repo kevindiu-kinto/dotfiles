@@ -18,6 +18,9 @@ tools=(
     "docker"
     "docker-compose"
     "aws-cli-v2"
+    "github-cli"
+    "gnupg"
+    "go"
 )
 
 echo "🔧 Installing CLI tools in batch..."
