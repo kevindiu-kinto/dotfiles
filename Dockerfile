@@ -71,12 +71,14 @@ RUN chmod +x /tmp/setup-directories.sh && /tmp/setup-directories.sh
 
 FROM directory-setup AS final
 
+COPY --chown=$USERNAME:$USERNAME scripts/start-sshd.sh /tmp/
 RUN sudo mkdir -p /var/run/sshd && \
-    sudo ssh-keygen -A && \
     sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
     sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
-    echo "$USERNAME:dev" | sudo chpasswd
+    echo "$USERNAME:dev" | sudo chpasswd && \
+    sudo mv /tmp/start-sshd.sh /usr/local/bin/start-sshd.sh && \
+    sudo chmod +x /usr/local/bin/start-sshd.sh
 
 EXPOSE 22
 WORKDIR /workspace
-CMD ["sudo", "/usr/sbin/sshd", "-D"]
+CMD ["sudo", "/usr/local/bin/start-sshd.sh"]

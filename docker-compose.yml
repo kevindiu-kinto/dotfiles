@@ -24,6 +24,7 @@ services:
       - git-credentials:/home/dev/.git-credentials-dir
       - gnupg-config:/home/dev/.gnupg
       - git-config:/home/dev/.git-config-volume
+      - ssh-host-keys:/etc/ssh
       - /var/run/docker.sock:/var/run/docker.sock
       - docker-config:/home/dev/.docker
     environment:
@@ -43,4 +44,5 @@ volumes:
   gnupg-config:
   git-config:
   ssh-config:
+  ssh-host-keys:
   docker-config:
