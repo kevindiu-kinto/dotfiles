@@ -1,9 +1,5 @@
 FROM --platform=linux/amd64 archlinux:latest AS base-system
 
-ARG PACKAGES_VERSION=1
-ARG TOOLS_VERSION=1
-ARG BUILD_DATE
-ENV BUILD_DATE=${BUILD_DATE}
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 ENV SHELL=/bin/zsh
@@ -13,8 +9,8 @@ ARG USERNAME=dev
 ARG USER_UID=1000
 ARG USER_GID=1000
 
-RUN pacman -Sy --noconfirm
-RUN pacman -S --noconfirm \
+RUN pacman -Sy --noconfirm && \
+    pacman -S --noconfirm \
         base-devel \
         git \
         curl \
@@ -32,10 +28,9 @@ RUN pacman -S --noconfirm \
         gzip \
         ca-certificates \
         github-cli \
-        gnupg
-
-RUN pacman -S --noconfirm go
-RUN pacman -Syu --noconfirm
+        gnupg \
+        go && \
+    pacman -Scc --noconfirm
 
 RUN groupadd --gid $USER_GID $USERNAME && \
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/zsh && \
@@ -44,7 +39,8 @@ USER $USERNAME
 WORKDIR /home/$USERNAME
 
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-RUN git clone https://aur.archlinux.org/yay.git /tmp/yay && \
+
+RUN git clone --depth 1 https://aur.archlinux.org/yay.git /tmp/yay && \
     cd /tmp/yay && \
     makepkg -si --noconfirm && \
     cd / && \
@@ -53,25 +49,21 @@ RUN git clone https://aur.archlinux.org/yay.git /tmp/yay && \
 
 FROM base-system AS pacman-tools
 
-# Install CLI tools via pacman (most stable layer)
 COPY --chown=$USERNAME:$USERNAME scripts/install-pacman-tools.sh /tmp/
 RUN chmod +x /tmp/install-pacman-tools.sh && /tmp/install-pacman-tools.sh
 
 FROM pacman-tools AS go-tools
 
-# Install Go development tools (changes when adding new Go tools)
 COPY --chown=$USERNAME:$USERNAME scripts/install-go-tools.sh /tmp/
 RUN chmod +x /tmp/install-go-tools.sh && /tmp/install-go-tools.sh
 
 FROM go-tools AS zsh-plugins
 
-# Install zsh plugins (changes when adding new plugins)
 COPY --chown=$USERNAME:$USERNAME scripts/install-zsh-plugins.sh /tmp/
 RUN chmod +x /tmp/install-zsh-plugins.sh && /tmp/install-zsh-plugins.sh
 
 FROM zsh-plugins AS directory-setup
 
-# Setup directories and permissions (changes with config updates)
 COPY --chown=$USERNAME:$USERNAME scripts/setup-directories.sh /tmp/
 RUN chmod +x /tmp/setup-directories.sh && /tmp/setup-directories.sh
 
