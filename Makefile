@@ -1,7 +1,7 @@
 # Development Environment Makefile
 # Essential Docker management commands
 
-.PHONY: help build start stop clean rebuild logs shell ssh status rm install
+.PHONY: help build start stop clean rebuild logs shell ssh status rm install uninstall
 
 # Colors for output
 BLUE := \033[0;34m
@@ -32,6 +32,7 @@ help:
 	@printf "\033[1;33mAccess:\033[0m\n"
 	@printf "  \033[0;34mshell\033[0m      Open tmux session with zsh in container\n"
 	@printf "  \033[0;34minstall\033[0m    Install auto-shell to host shell config\n"
+	@printf "  \033[0;34muninstall\033[0m  Remove auto-shell from host shell config\n"
 	@printf "  \033[0;34mssh\033[0m        Connect via SSH (for VS Code)\n"
 	@printf "  \033[0;34mlogs\033[0m       Show container logs\n"
 	@printf "  \033[0;34mstatus\033[0m     Show container status\n"
@@ -108,6 +109,23 @@ install:
 		echo "$(GREEN)[INSTALLED]$(NC) Added to $$SHELL_CONFIG"; \
 	fi
 	@echo "$(YELLOW)[NOTE]$(NC) Open a new terminal to auto-enter the container"
+
+uninstall:
+	@echo "$(BLUE)[UNINSTALL]$(NC) Removing auto-shell..."
+	@SHELL_CONFIG=""; \
+	if [ -f ~/.zshrc ]; then SHELL_CONFIG=~/.zshrc; \
+	elif [ -f ~/.bash_profile ]; then SHELL_CONFIG=~/.bash_profile; \
+	elif [ -f ~/.bashrc ]; then SHELL_CONFIG=~/.bashrc; \
+	else echo "$(RED)[ERROR]$(NC) No shell config file found" && exit 1; fi; \
+	\
+	if grep -q "DOTFILES_AUTO_SHELL_DONE" "$$SHELL_CONFIG"; then \
+		echo "$(YELLOW)[REMOVING]$(NC) Removing from $$SHELL_CONFIG"; \
+		sed -i.bak '/# Auto-enter dotfiles development container/,/^fi$$/d' "$$SHELL_CONFIG"; \
+		echo "$(GREEN)[REMOVED]$(NC) Auto-shell removed from $$SHELL_CONFIG"; \
+	else \
+		echo "$(YELLOW)[SKIP]$(NC) Auto-shell not found in $$SHELL_CONFIG"; \
+	fi
+	@echo "$(YELLOW)[NOTE]$(NC) Open a new terminal for normal behavior"
 
 ssh:
 	@echo "$(BLUE)[SSH]$(NC) Connecting via SSH (password: dev)..."
