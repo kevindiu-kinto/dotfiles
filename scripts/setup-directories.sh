@@ -34,6 +34,7 @@ setup_persistent_directories() {
     mkdir -p /home/dev/.gnupg
     mkdir -p /home/dev/.ssh
     mkdir -p /home/dev/.docker
+    mkdir -p /home/dev/.bash_history_data
 
     # Set proper permissions for SSH and GPG directories
     chmod 700 /home/dev/.ssh
@@ -51,6 +52,10 @@ setup_persistent_directories() {
     mkdir -p /home/dev/.git-config-volume
     ln -sf /home/dev/.git-config-volume/.gitconfig /home/dev/.gitconfig
 
+    # Setup bash history persistence
+    touch /home/dev/.bash_history_data/.bash_history
+    ln -sf /home/dev/.bash_history_data/.bash_history /home/dev/.bash_history
+
     # Ensure ownership is correct
     sudo chown -R dev:dev /home/dev/.config
     sudo chown -R dev:dev /home/dev/.gnupg
@@ -58,6 +63,7 @@ setup_persistent_directories() {
     sudo chown -R dev:dev /home/dev/.git-config-volume
     sudo chown -R dev:dev /home/dev/.ssh
     sudo chown -R dev:dev /home/dev/.docker
+    sudo chown -R dev:dev /home/dev/.bash_history_data
 
     echo "✅ Persistent directories setup completed"
 }

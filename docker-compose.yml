@@ -24,6 +24,8 @@ services:
       - go-mod-cache:/go/pkg/mod
       # Persist zsh history
       - zsh-history:/home/dev/.zsh_history_data
+      # Persist bash history
+      - bash-history:/home/dev/.bash_history_data
       # Persist GitHub CLI configuration and credentials
       - gh-config:/home/dev/.config/gh
       # Persist Git credentials directory
@@ -46,6 +48,7 @@ services:
 volumes:
   go-mod-cache:
   zsh-history:
+  bash-history:
   gh-config:
   git-credentials:
   gnupg-config:

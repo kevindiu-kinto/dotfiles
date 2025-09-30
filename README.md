@@ -94,7 +94,7 @@ The container automatically sets up a proper Go workspace:
 - ⚡ **Lightning Fast** - Multi-stage caching (5s config updates, 30s builds)
 - 🔧 **Easy to modify** - Well-structured configuration files
 - 📦 **Extensible** - Simple script to add your own tools
-- 🔄 **Persistent** - Volumes for Go modules, shell history, GitHub auth, GPG keys, SSH config, Docker config
+- 🔄 **Persistent** - Volumes for Go modules, shell histories (zsh/bash), GitHub auth, GPG keys, SSH config, Docker config
 - 🔌 **VS Code Ready** - SSH access for Remote development
 - 🐹 **Go Optimized** - Proper Go workspace structure with symlinks
 - 🔐 **GitHub Ready** - Persistent GitHub CLI authentication and GPG signing
@@ -165,7 +165,8 @@ This environment provides persistent storage for GitHub credentials and GPG keys
 
 Your credentials and configurations are automatically persisted in Docker volumes:
 - `go-mod-cache` - Go module cache for faster builds
-- `zsh-history` - Shell command history
+- `zsh-history` - Zsh shell command history
+- `bash-history` - Bash shell command history
 - `gh-config` - GitHub CLI authentication
 - `git-credentials` - Git credential storage
 - `gnupg-config` - GPG keys and configuration
