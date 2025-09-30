@@ -168,6 +168,7 @@ Your credentials and configurations are automatically persisted in Docker volume
 - `zsh-history` - Zsh shell command history
 - `bash-history` - Bash shell command history
 - `gh-config` - GitHub CLI authentication
+- `aws-config` - AWS CLI configuration and credentials
 - `git-credentials` - Git credential storage
 - `gnupg-config` - GPG keys and configuration
 - `git-config` - Git configuration (user.name, user.email, etc.)

@@ -62,7 +62,12 @@ FROM go-tools AS zsh-plugins
 COPY --chown=$USERNAME:$USERNAME scripts/install-zsh-plugins.sh /tmp/
 RUN chmod +x /tmp/install-zsh-plugins.sh && /tmp/install-zsh-plugins.sh
 
-FROM zsh-plugins AS directory-setup
+FROM zsh-plugins AS aur-tools
+
+COPY --chown=$USERNAME:$USERNAME scripts/install-aur-tools.sh /tmp/
+RUN chmod +x /tmp/install-aur-tools.sh && /tmp/install-aur-tools.sh
+
+FROM aur-tools AS directory-setup
 
 COPY --chown=$USERNAME:$USERNAME scripts/setup-directories.sh /tmp/
 RUN chmod +x /tmp/setup-directories.sh && /tmp/setup-directories.sh

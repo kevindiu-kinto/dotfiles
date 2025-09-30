@@ -17,6 +17,7 @@ tools=(
     "lazygit"
     "docker"
     "docker-compose"
+    "aws-cli-v2"
 )
 
 echo "🔧 Installing CLI tools in batch..."

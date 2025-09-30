@@ -27,6 +27,7 @@ setup_persistent_directories() {
     mkdir -p /home/dev/.ssh
     mkdir -p /home/dev/.docker
     mkdir -p /home/dev/.bash_history_data
+    mkdir -p /home/dev/.aws
 
     chmod 700 /home/dev/.ssh
     chmod 700 /home/dev/.gnupg
@@ -50,6 +51,7 @@ setup_persistent_directories() {
     sudo chown -R dev:dev /home/dev/.ssh
     sudo chown -R dev:dev /home/dev/.docker
     sudo chown -R dev:dev /home/dev/.bash_history_data
+    sudo chown -R dev:dev /home/dev/.aws
 
     echo "✅ Persistent directories setup completed"
 }

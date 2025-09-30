@@ -2,6 +2,10 @@
 .dockerignore
 docker-compose.override.yml
 
+# Workspace directory (user projects)
+workspace/*
+!workspace/.gitkeep
+
 # IDE
 .vscode/
 .idea/
