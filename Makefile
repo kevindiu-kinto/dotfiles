@@ -31,6 +31,7 @@ help:
 	@echo ""
 	@printf "\033[1;33mAccess:\033[0m\n"
 	@printf "  \033[0;34mshell\033[0m      Open tmux session with zsh in container\n"
+	@printf "  \033[0;34minstall\033[0m    Install auto-shell to host shell config\n"
 	@printf "  \033[0;34mssh\033[0m        Connect via SSH (for VS Code)\n"
 	@printf "  \033[0;34mlogs\033[0m       Show container logs\n"
 	@printf "  \033[0;34mstatus\033[0m     Show container status\n"
@@ -82,6 +83,30 @@ rm:
 shell:
 	@echo "$(BLUE)[SHELL]$(NC) Opening tmux session with zsh in container..."
 	@docker exec -it dev-environment tmux new-session -A -s main
+
+install:
+	@echo "$(BLUE)[INSTALL]$(NC) Setting up auto-shell..."
+	@SHELL_CONFIG=""; \
+	if [ -f ~/.zshrc ]; then SHELL_CONFIG=~/.zshrc; \
+	elif [ -f ~/.bash_profile ]; then SHELL_CONFIG=~/.bash_profile; \
+	elif [ -f ~/.bashrc ]; then SHELL_CONFIG=~/.bashrc; \
+	else echo "$(RED)[ERROR]$(NC) No shell config file found" && exit 1; fi; \
+	\
+	if grep -q "DOTFILES_AUTO_SHELL_DONE" "$$SHELL_CONFIG"; then \
+		echo "$(YELLOW)[SKIP]$(NC) Already installed in $$SHELL_CONFIG"; \
+	else \
+		echo "" >> "$$SHELL_CONFIG"; \
+		echo "# Auto-enter dotfiles development container" >> "$$SHELL_CONFIG"; \
+		echo "if [[ -z \"\$$DOTFILES_AUTO_SHELL_DONE\" ]]; then" >> "$$SHELL_CONFIG"; \
+		echo "  export DOTFILES_AUTO_SHELL_DONE=1" >> "$$SHELL_CONFIG"; \
+		echo "  if docker ps | grep -q dev-environment; then" >> "$$SHELL_CONFIG"; \
+		echo "    echo \"🐳 Auto-entering development container...\"" >> "$$SHELL_CONFIG"; \
+		echo "    cd $(shell pwd) && exec make shell" >> "$$SHELL_CONFIG"; \
+		echo "  fi" >> "$$SHELL_CONFIG"; \
+		echo "fi" >> "$$SHELL_CONFIG"; \
+		echo "$(GREEN)[INSTALLED]$(NC) Added to $$SHELL_CONFIG"; \
+	fi
+	@echo "$(YELLOW)[NOTE]$(NC) Open a new terminal to auto-enter the container"
 
 ssh:
 	@echo "$(BLUE)[SSH]$(NC) Connecting via SSH (password: dev)..."
