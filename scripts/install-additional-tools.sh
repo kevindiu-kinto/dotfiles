@@ -183,10 +183,15 @@ setup_persistent_directories() {
     # Create symlink for git credentials
     ln -sf /home/dev/.git-credentials-dir/credentials /home/dev/.git-credentials
 
+    # Setup git config volume (persistent across rebuilds)
+    mkdir -p /home/dev/.git-config-volume
+    ln -sf /home/dev/.git-config-volume/.gitconfig /home/dev/.gitconfig
+
     # Ensure ownership is correct
     sudo chown -R dev:dev /home/dev/.config
     sudo chown -R dev:dev /home/dev/.gnupg
     sudo chown -R dev:dev /home/dev/.git-credentials-dir
+    sudo chown -R dev:dev /home/dev/.git-config-volume
 
     echo "✅ Persistent directories setup completed"
 }

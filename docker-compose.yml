@@ -18,7 +18,6 @@ services:
       - ./configs/.vimrc:/home/dev/.vimrc:ro
       - ./configs/.zshrc:/home/dev/.zshrc:ro
       - ./configs/.tmux.conf:/home/dev/.tmux.conf:ro
-      - ./configs/.gitconfig:/home/dev/.gitconfig:ro
       # Mount SSH keys (if you have them)
       - ~/.ssh:/home/dev/.ssh:ro
       # Mount Go module cache to speed up builds
@@ -31,6 +30,8 @@ services:
       - git-credentials:/home/dev/.git-credentials-dir
       # Persist GPG keys for commit signing
       - gnupg-config:/home/dev/.gnupg
+      # Persist git configuration
+      - git-config:/home/dev/.git-config-volume
     environment:
       - GOPROXY=https://proxy.golang.org,direct
       - GOSUMDB=sum.golang.org
@@ -44,3 +45,4 @@ volumes:
   gh-config:
   git-credentials:
   gnupg-config:
+  git-config:
