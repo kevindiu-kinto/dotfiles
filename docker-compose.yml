@@ -7,11 +7,10 @@ services:
     container_name: dev-environment
     env_file:
       - .env
-    security_opt:
-      - no-new-privileges:true
     user: "1000:1000"
+    init: true
     ports:
-      - "2222:22"
+      - "2222:2222"
       - "8080:8080"
       - "3000:3000"
       - "9000:9000"
@@ -27,11 +26,9 @@ services:
       - git-tools:/home/dev/.git_tools
       - aws-config:/home/dev/.aws
       - vscode-config:/home/dev/.vscode-server
+      - npm-cache:/home/dev/.npm
       - /var/run/docker.sock:/var/run/docker.sock
       - docker-config:/home/dev/.docker
-    environment:
-      - GOPROXY=https://proxy.golang.org,direct
-      - GOSUMDB=sum.golang.org
     stdin_open: true
     tty: true
     restart: unless-stopped
@@ -45,8 +42,17 @@ volumes:
   security-tools:
   aws-config:
   vscode-config:
+  npm-cache:
   docker-config:
 
 networks:
   dev-network:
     driver: bridge
+    driver_opts:
+      com.docker.network.bridge.enable_icc: "true"
+      com.docker.network.bridge.enable_ip_masquerade: "true"
+      com.docker.network.bridge.host_binding_ipv4: "0.0.0.0"
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16

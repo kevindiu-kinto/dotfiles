@@ -1,4 +1,4 @@
-.PHONY: help build start stop clean rebuild logs shell ssh status rm install uninstall
+.PHONY: help build start stop clean logs shell ssh status rm install uninstall
 
 BLUE := \033[0;34m
 GREEN := \033[0;32m
@@ -21,7 +21,6 @@ help:
 	@printf "\033[1;33mMaintenance:\033[0m\n"
 	@printf "  \033[0;34mclean\033[0m          Clean cache and temporary data\n"
 	@printf "  \033[0;34mrm\033[0m             Remove everything including volumes\n"
-	@printf "  \033[0;34mrebuild\033[0m        Full rebuild without cache\n"
 	@echo ""
 	@printf "\033[1;33mAccess:\033[0m\n"
 	@printf "  \033[0;34mshell\033[0m      Open tmux session with zsh in container\n"
@@ -34,7 +33,7 @@ help:
 
 build:
 	@echo "$(BLUE)[BUILD]$(NC) Building development environment..."
-	@docker-compose build
+	@export DOCKER_BUILDKIT=1 && export COMPOSE_DOCKER_CLI_BUILD=1 && docker-compose build
 	@$(MAKE) start
 	@echo "$(GREEN)[SUCCESS]$(NC) Environment ready!"
 	@echo "SSH: ssh dev@localhost -p 2222 (password: dev)"

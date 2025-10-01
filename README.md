@@ -123,7 +123,7 @@ The environment uses a **multi-stage Docker build** with intelligent caching for
 ### 🚀 Build Commands
 ```bash
 make build            # Build and start (uses cache automatically after first build)
-make rebuild          # Full rebuild without cache (when something is broken)
+make clean && make build  # Full rebuild when something is broken
 ```
 
 
@@ -289,7 +289,6 @@ make start           # Start existing containers
 make stop            # Stop containers
 make clean           # Clean cache (safe - preserves your data)
 make rm              # Remove everything including volumes (destructive!)
-make rebuild         # Full rebuild without cache (when broken)
 
 # Access Commands
 make shell           # Open tmux session with zsh in container
@@ -355,7 +354,7 @@ docker run --rm myapp
 docker-compose up -d
 
 # When things break
-make rebuild            # ~4 minutes (fresh start)
+make clean && make build  # ~4 minutes (fresh start)
 ```
 
 ### 🎯 When to Use Each Command
@@ -363,7 +362,6 @@ make rebuild            # ~4 minutes (fresh start)
 - **install**: One-time setup for automatic container entry (highly recommended!)
 - **clean**: Free up disk space - removes cache but keeps your valuable data
 - **rm**: Nuclear option - removes EVERYTHING including Git credentials, GPG keys (be careful!)
-- **rebuild**: Something is broken, need fresh start (rarely needed)
 - **start/stop**: Control running containers without rebuilding
 
 ## 🔧 Troubleshooting
