@@ -4,12 +4,6 @@ export ZSH="$HOME/.oh-my-zsh"
 # GPG TTY configuration for commit signing
 export GPG_TTY=$(tty)
 
-# Auto-start tmux if not already in tmux and not in SSH
-if [[ -z "$TMUX" ]] && [[ -n "$SSH_CONNECTION" ]] && [[ "$TERM" != "screen"* ]]; then
-    # Start tmux with a default session name
-    exec tmux new-session -A -s main
-fi
-
 # Oh My Zsh configuration
 ZSH_THEME="robbyrussell"
 
