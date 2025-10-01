@@ -39,16 +39,17 @@ RUN --mount=type=cache,target=/var/cache/pacman/pkg \
         tar \
         gzip \
         ca-certificates && \
-    pacman -Scc --noconfirm && \
-    groupadd --gid $USER_GID $USERNAME && \
+    pacman -Scc --noconfirm
+
+COPY configs/linux/sysctl.conf /etc/sysctl.d/99-custom.conf
+COPY configs/linux/profile /etc/profile.d/99-custom.sh
+
+RUN groupadd --gid $USER_GID $USERNAME && \
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/zsh && \
+    chmod 750 /home/$USERNAME && \
     echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 USER $USERNAME
 WORKDIR /home/$USERNAME
-
-RUN for i in {1..3}; do \
-        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended && break || sleep 5; \
-    done
 
 RUN git clone --depth 1 https://aur.archlinux.org/yay.git /tmp/yay && \
     cd /tmp/yay && \

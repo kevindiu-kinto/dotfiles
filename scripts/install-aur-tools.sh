@@ -8,6 +8,7 @@ aur_tools=(
     "tfenv"
     "aws-cli-bin"
     "k9s"
+    "oh-my-zsh-git"
 )
 
 for tool in "${aur_tools[@]}"; do

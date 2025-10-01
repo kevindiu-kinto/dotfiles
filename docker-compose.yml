@@ -9,6 +9,20 @@ services:
       - .env
     user: "1000:1000"
     init: true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
+    read_only: false
+    security_opt:
+      - no-new-privileges:false
+    sysctls:
+      - net.core.somaxconn=65535
+      - net.ipv4.ip_local_port_range=1024 65535
     ports:
       - "2222:2222"
       - "8080:8080"
