@@ -7,6 +7,7 @@ echo "📦 Installing AUR tools..."
 aur_tools=(
     "tfenv"
     "aws-cli-bin"
+    "k9s"
 )
 
 for tool in "${aur_tools[@]}"; do

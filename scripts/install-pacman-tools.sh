@@ -23,6 +23,8 @@ tools=(
     "nodejs"
     "npm"
     "zip"
+    "kubectl"
+    "helm"
 )
 
 sudo pacman -S --noconfirm --needed "${tools[@]}" || echo "❌ Some tools failed to install"
