@@ -6,6 +6,7 @@ echo "📦 Installing AUR tools..."
 
 aur_tools=(
     "tfenv"
+    "aws-cli-bin"
 )
 
 echo "🔧 Installing AUR tools via yay..."

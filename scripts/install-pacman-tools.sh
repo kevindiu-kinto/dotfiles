@@ -17,7 +17,6 @@ tools=(
     "lazygit"
     "docker"
     "docker-compose"
-    "aws-cli-v2"
     "github-cli"
     "gnupg"
     "go"
