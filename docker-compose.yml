@@ -14,17 +14,13 @@ services:
       - ./workspace:/workspace
       - ./configs/.vimrc:/home/dev/.vimrc:ro
       - ./configs/.zshrc:/home/dev/.zshrc:ro
+      - ./configs/.bashrc:/home/dev/.bashrc:ro
       - ./configs/.tmux.conf:/home/dev/.tmux.conf:ro
-      - ssh-config:/home/dev/.ssh
+      - security-tools:/home/dev/.security
       - go-cache:/home/dev/go
-      - zsh-history:/home/dev/.zsh_history_data
-      - bash-history:/home/dev/.bash_history_data
-      - gh-config:/home/dev/.config/gh
+      - shell-history:/home/dev/.shell_history
+      - git-tools:/home/dev/.git_tools
       - aws-config:/home/dev/.aws
-      - git-credentials:/home/dev/.git-credentials-dir
-      - gnupg-config:/home/dev/.gnupg
-      - git-config:/home/dev/.git-config-volume
-      - ssh-host-keys:/etc/ssh
       - /var/run/docker.sock:/var/run/docker.sock
       - docker-config:/home/dev/.docker
     environment:
@@ -36,13 +32,8 @@ services:
 
 volumes:
   go-cache:
-  zsh-history:
-  bash-history:
-  gh-config:
+  shell-history:
+  git-tools:
+  security-tools:
   aws-config:
-  git-credentials:
-  gnupg-config:
-  git-config:
-  ssh-config:
-  ssh-host-keys:
   docker-config:

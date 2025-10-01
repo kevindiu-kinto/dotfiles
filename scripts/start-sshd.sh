@@ -1,18 +1,24 @@
 #!/bin/bash
 
-# SSH Daemon Startup Script
-# Generates SSH host keys only if they don't exist (for persistence)
-
 echo "Starting SSH daemon..."
 
-# Generate SSH host keys only if they do not exist
-if [ ! -f /etc/ssh/ssh_host_rsa_key ]; then
-    echo "Generating SSH host keys..."
-    ssh-keygen -A
+SSH_KEYS_DIR="/home/dev/.security/ssh-host-keys"
+SYSTEM_SSH_DIR="/etc/ssh"
+
+mkdir -p "$SSH_KEYS_DIR"
+
+if [ ! -f "$SSH_KEYS_DIR/ssh_host_rsa_key" ]; then
+    echo "Generating SSH host keys in persistent storage..."
+    sudo ssh-keygen -f "$SSH_KEYS_DIR/ssh_host_rsa_key" -N '' -t rsa
+    sudo ssh-keygen -f "$SSH_KEYS_DIR/ssh_host_ecdsa_key" -N '' -t ecdsa
+    sudo ssh-keygen -f "$SSH_KEYS_DIR/ssh_host_ed25519_key" -N '' -t ed25519
 else
-    echo "SSH host keys already exist, reusing..."
+    echo "SSH host keys already exist, reusing from persistent storage..."
 fi
 
-# Start SSH daemon
+sudo cp "$SSH_KEYS_DIR"/ssh_host_* "$SYSTEM_SSH_DIR/"
+sudo chmod 600 "$SYSTEM_SSH_DIR"/ssh_host_*_key
+sudo chmod 644 "$SYSTEM_SSH_DIR"/ssh_host_*_key.pub
+
 echo "Starting SSH daemon on port 22..."
 exec /usr/sbin/sshd -D

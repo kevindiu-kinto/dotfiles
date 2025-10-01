@@ -87,3 +87,20 @@ mkcd() {
 # History configuration
 HISTSIZE=10000
 SAVEHIST=10000
+HISTFILE=/home/dev/.shell_history/zsh_history
+
+# Create history directory if it doesn't exist
+mkdir -p "$(dirname "$HISTFILE")"
+
+# History options
+setopt HIST_VERIFY
+setopt SHARE_HISTORY
+setopt APPEND_HISTORY
+setopt INC_APPEND_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS
+
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"

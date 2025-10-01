@@ -9,12 +9,9 @@ go_tools=(
     "github.com/go-delve/delve/cmd/dlv@latest"
 )
 
-echo "Installing essential Go tools in parallel..."
 for tool in "${go_tools[@]}"; do
-    echo "📦 Installing $tool..."
     go install "$tool" &
 done
 
 wait
-
 echo "✅ Go tools installation completed!"
