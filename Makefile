@@ -1,19 +1,13 @@
-# Development Environment Makefile
-# Essential Docker management commands
-
 .PHONY: help build start stop clean rebuild logs shell ssh status rm install uninstall
 
-# Colors for output
 BLUE := \033[0;34m
 GREEN := \033[0;32m
 YELLOW := \033[1;33m
 RED := \033[0;31m
 NC := \033[0m # No Color
 
-# Default target
 .DEFAULT_GOAL := help
 
-# Show this help message
 help:
 	@echo ""
 	@echo "🐳 Development Environment Commands"
@@ -49,16 +43,9 @@ start:
 	@echo "$(BLUE)[START]$(NC) Starting containers..."
 	@docker-compose up -d
 
-# Stop containers
 stop:
 	@echo "$(BLUE)[STOP]$(NC) Stopping containers..."
 	@docker-compose down
-
-rebuild:
-	@echo "$(BLUE)[REBUILD]$(NC) Force rebuilding without cache..."
-	@docker-compose build --no-cache
-	@$(MAKE) start
-	@echo "$(GREEN)[SUCCESS]$(NC) Complete rebuild finished!"
 
 clean:
 	@echo "$(YELLOW)[CLEAN]$(NC) Cleaning cache and temporary data..."

@@ -20,9 +20,15 @@ tools=(
     "github-cli"
     "gnupg"
     "go"
+    "nodejs"
+    "npm"
+    "zip"
 )
 
 sudo pacman -S --noconfirm --needed "${tools[@]}" || echo "❌ Some tools failed to install"
 sudo pacman -Scc --noconfirm || true
+
+echo "🔧 Enabling corepack..."
+sudo corepack enable || echo "❌ Failed to enable corepack"
 
 echo "✅ Pacman tools installation completed!"
