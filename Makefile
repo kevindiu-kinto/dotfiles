@@ -27,6 +27,7 @@ help:
 	@printf "  \033[0;34minstall\033[0m    Install auto-shell to host shell config\n"
 	@printf "  \033[0;34muninstall\033[0m  Remove auto-shell from host shell config\n"
 	@printf "  \033[0;34mssh\033[0m        Connect via SSH (for VS Code)\n"
+	@printf "  \033[0;34mssh-setup\033[0m  Set up SSH key authentication (no password)\n"
 	@printf "  \033[0;34mlogs\033[0m       Show container logs\n"
 	@printf "  \033[0;34mstatus\033[0m     Show container status\n"
 	@echo ""
@@ -116,6 +117,38 @@ uninstall:
 ssh:
 	@echo "$(BLUE)[SSH]$(NC) Connecting via SSH (password: dev)..."
 	@ssh -o StrictHostKeyChecking=no dev@localhost -p 2222 || true
+
+ssh-setup:
+	@echo "$(BLUE)[SSH-SETUP]$(NC) Setting up SSH key authentication..."
+	@if [ ! -f ~/.ssh/dev-environment ]; then \
+		echo "🔑 Generating SSH key pair..."; \
+		ssh-keygen -t ed25519 -f ~/.ssh/dev-environment -N '' -C "dev-environment-key"; \
+	else \
+		echo "✅ SSH key already exists"; \
+	fi
+	@echo "📋 Setting up container SSH directory..."
+	@docker exec dev-environment mkdir -p /home/dev/.ssh
+	@echo "🔐 Installing public key to container..."
+	@cat ~/.ssh/dev-environment.pub | docker exec -i dev-environment sh -c 'cat > /home/dev/.ssh/authorized_keys'
+	@docker exec dev-environment chmod 700 /home/dev/.ssh
+	@docker exec dev-environment chmod 600 /home/dev/.ssh/authorized_keys
+	@echo "⚙️  Updating SSH config..."
+	@if grep -q "^Host dev-environment" ~/.ssh/config 2>/dev/null; then \
+		sed -i '' '/^Host dev-environment$$/,/^$$/d' ~/.ssh/config; \
+	fi
+	@echo "" >> ~/.ssh/config
+	@echo "Host dev-environment" >> ~/.ssh/config
+	@echo "    HostName localhost" >> ~/.ssh/config
+	@echo "    Port 2222" >> ~/.ssh/config
+	@echo "    User dev" >> ~/.ssh/config
+	@echo "    IdentityFile ~/.ssh/dev-environment" >> ~/.ssh/config
+	@echo "    StrictHostKeyChecking no" >> ~/.ssh/config
+	@echo "    UserKnownHostsFile /dev/null" >> ~/.ssh/config
+	@echo "    PasswordAuthentication no" >> ~/.ssh/config
+	@echo "🧪 Testing SSH key authentication..."
+	@ssh dev-environment 'echo "✅ SSH key authentication successful!"' || echo "❌ SSH setup failed"
+	@echo "$(GREEN)[SUCCESS]$(NC) SSH key authentication configured!"
+	@echo "$(YELLOW)[VS CODE]$(NC) Connect to 'dev-environment' in VS Code Remote-SSH"
 
 logs:
 	@docker-compose logs -f
