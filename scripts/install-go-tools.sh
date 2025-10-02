@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 echo "🐹 Installing Go tools..."
 
@@ -10,6 +10,7 @@ go_tools=(
 )
 
 for tool in "${go_tools[@]}"; do
+    echo "🔄 Installing $tool..."
     go install "$tool" &
 done
 

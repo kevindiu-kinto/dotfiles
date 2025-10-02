@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 echo "📦 Installing pacman tools..."
 
@@ -27,7 +27,16 @@ tools=(
     "helm"
 )
 
-sudo pacman -S --noconfirm --needed "${tools[@]}" || echo "❌ Some tools failed to install"
+echo "🔄 Installing ${#tools[@]} pacman tools..."
+sudo pacman -S --noconfirm --needed "${tools[@]}"
+
+echo "🧹 Cleaning package cache..."
+sudo pacman -Scc --noconfirm || true
+
+echo "🔧 Enabling corepack..."
+sudo corepack enable || echo "⚠️  Failed to enable corepack (non-critical)"
+
+echo "✅ Pacman tools installation completed!"
 sudo pacman -Scc --noconfirm || true
 
 echo "🔧 Enabling corepack..."

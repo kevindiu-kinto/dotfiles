@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 echo "📦 Installing AUR tools..."
 
@@ -12,7 +12,9 @@ aur_tools=(
 )
 
 for tool in "${aur_tools[@]}"; do
-    yay -S --noconfirm --needed "$tool" || echo "❌ Failed to install $tool"
+    echo "🔄 Installing $tool..."
+    yay -S --noconfirm --needed "$tool"
+    echo "✅ Successfully installed $tool"
 done
 
 echo "✅ AUR tools installation completed!"
