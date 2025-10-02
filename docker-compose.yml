@@ -1,9 +1,7 @@
 services:
   volume-init:
-    build:
-      context: .
-      args:
-        - BUILD_DATE=${BUILD_DATE:-}
+    platform: linux/amd64
+    image: archlinux:latest
     volumes:
       - ./scripts/init-volumes.sh:/init-volumes.sh:ro
       - security-tools:/mnt/security-tools
@@ -17,6 +15,7 @@ services:
     command: ["sh", "/init-volumes.sh"]
     
   dev-env:
+    platform: linux/amd64
     depends_on:
       volume-init:
         condition: service_completed_successfully

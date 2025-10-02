@@ -33,9 +33,13 @@ init_volume_files() {
 set_volume_ownership() {
     echo "👤 Setting volume ownership..."
     
-    chown -R 1000:1000 /mnt/{security-tools,go-cache,shell-history,git-tools,aws-config,vscode-config,npm-cache,docker-config}
-    
-    echo "✅ Volume ownership set to dev:dev (1000:1000)"
+    # Skip chown when running as dev user - files are already owned correctly
+    if [ "$(id -u)" = "0" ]; then
+        chown -R 1000:1000 /mnt/{security-tools,go-cache,shell-history,git-tools,aws-config,vscode-config,npm-cache,docker-config}
+        echo "✅ Volume ownership set to dev:dev (1000:1000)"
+    else
+        echo "✅ Running as dev user - ownership already correct"
+    fi
 }
 
 setup_ssh_keys() {
@@ -55,14 +59,21 @@ setup_ssh_keys() {
 set_volume_permissions() {
     echo "🔒 Setting volume permissions..."
     
-    chmod -R 755 /mnt/{go-cache,git-tools,aws-config,vscode-config,npm-cache,docker-config}
+    # Set permissions for directories and files we can modify
+    chmod -R 755 /mnt/{go-cache,git-tools,aws-config,vscode-config,npm-cache,docker-config} 2>/dev/null || true
     
-    chmod 755 /mnt/shell-history
-    chmod 644 /mnt/shell-history/{bash_history,zsh_history,tmux_history}
+    chmod 755 /mnt/shell-history 2>/dev/null || true
+    chmod 644 /mnt/shell-history/{bash_history,zsh_history,tmux_history} 2>/dev/null || true
     
-    chmod -R 700 /mnt/security-tools
+    # Only set permissions on security-tools if we own the files
+    if [ "$(id -u)" = "0" ]; then
+        chmod -R 700 /mnt/security-tools
+    else
+        # Set permissions only on files we own, ignore errors for others
+        find /mnt/security-tools -user $(id -u) -exec chmod 700 {} \; 2>/dev/null || true
+    fi
     
-    chmod 600 /mnt/git-tools/git-credentials/credentials
+    chmod 600 /mnt/git-tools/git-credentials/credentials 2>/dev/null || true
     
     echo "✅ Volume permissions configured"
 }
