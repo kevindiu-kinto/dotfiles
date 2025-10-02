@@ -90,12 +90,9 @@ RUN chmod +x /tmp/security-hardening.sh && /tmp/security-hardening.sh
 FROM security-hardening AS final
 
 COPY --chown=$USERNAME:$USERNAME scripts/start-sshd.sh /tmp/
-COPY configs/sshd_config_secure /tmp/sshd_config_secure
 RUN sudo mkdir -p /var/run/sshd && \
     sudo mkdir -p /usr/share/empty.sshd && \
     sudo chmod 755 /usr/share/empty.sshd && \
-    sudo cp /tmp/sshd_config_secure /etc/ssh/sshd_config && \
-    sudo chmod 644 /etc/ssh/sshd_config && \
     echo "$USERNAME:dev" | sudo chpasswd && \
     sudo mv /tmp/start-sshd.sh /usr/local/bin/start-sshd.sh && \
     sudo chmod +x /usr/local/bin/start-sshd.sh

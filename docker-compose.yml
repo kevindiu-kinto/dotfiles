@@ -51,6 +51,7 @@ services:
       - ./configs/.vimrc:/home/dev/.vimrc:ro
       - ./configs/.zshrc:/home/dev/.zshrc:ro
       - ./configs/.tmux.conf:/home/dev/.tmux.conf:ro
+      - ./configs/linux/etc/ssh/sshd_config:/etc/ssh/sshd_config:ro
       - ./configs/linux/etc/sysctl.d/99-custom.conf:/etc/sysctl.d/99-custom.conf:ro
       - ./configs/linux/etc/profile.d/99-custom.sh:/etc/profile.d/99-custom.sh:ro
       - ./configs/linux/etc/sysctl.d/99-network.conf:/etc/sysctl.d/99-network.conf:ro
