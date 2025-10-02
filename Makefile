@@ -120,6 +120,8 @@ ssh:
 
 ssh-setup:
 	@echo "$(BLUE)[SSH-SETUP]$(NC) Setting up SSH key authentication..."
+	@echo "🧹 Cleaning old host keys..."
+	@ssh-keygen -R "[localhost]:2222" 2>/dev/null || true
 	@if [ ! -f ~/.ssh/dev-environment ]; then \
 		echo "🔑 Generating SSH key pair..."; \
 		ssh-keygen -t ed25519 -f ~/.ssh/dev-environment -N '' -C "dev-environment-key"; \
