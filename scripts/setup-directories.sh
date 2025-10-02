@@ -34,10 +34,9 @@ setup_persistent_directories() {
     ln -sf /home/dev/.security/gnupg /home/dev/.gnupg
     ln -sf /home/dev/.git_tools/gh /home/dev/.config/gh
 
-    # Set permissions
+    # Set permissions on non-volume directories
     chmod 700 /home/dev/.ssh /home/dev/.gnupg
     chmod 600 /home/dev/.git_tools/git-credentials/credentials
-    sudo chown -R dev:dev /home/dev/.gnupg /home/dev/.ssh /home/dev/.vscode-server
     
     echo "✅ Persistent directories setup completed"
 }

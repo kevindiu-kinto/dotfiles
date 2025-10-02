@@ -1,5 +1,29 @@
 services:
+  volume-init:
+    image: alpine:latest
+    volumes:
+      - security-tools:/mnt/security-tools
+      - go-cache:/mnt/go-cache
+      - shell-history:/mnt/shell-history
+      - git-tools:/mnt/git-tools
+      - aws-config:/mnt/aws-config
+      - vscode-config:/mnt/vscode-config
+      - npm-cache:/mnt/npm-cache
+      - docker-config:/mnt/docker-config
+    command: >
+      sh -c "
+        chown -R 1000:1000 /mnt/security-tools /mnt/go-cache /mnt/shell-history 
+                           /mnt/git-tools /mnt/aws-config /mnt/vscode-config 
+                           /mnt/npm-cache /mnt/docker-config &&
+        chmod -R 755 /mnt/go-cache /mnt/shell-history /mnt/git-tools /mnt/aws-config 
+                     /mnt/vscode-config /mnt/npm-cache /mnt/docker-config &&
+        chmod -R 700 /mnt/security-tools &&
+        echo 'Volume permissions and ownership initialized'
+      "
+    
   dev-env:
+    depends_on:
+      - volume-init
     build:
       context: .
       args:
