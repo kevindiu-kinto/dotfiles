@@ -1,7 +1,7 @@
 services:
   volume-init:
-    platform: linux/amd64
-    image: archlinux:latest
+    platform: linux/arm64
+    image: manjarolinux/base:latest
     volumes:
       - ./scripts/init-volumes.sh:/init-volumes.sh:ro
       - security-tools:/mnt/security-tools
@@ -15,7 +15,7 @@ services:
     command: ["sh", "/init-volumes.sh"]
     
   dev-env:
-    platform: linux/amd64
+    platform: linux/arm64
     depends_on:
       volume-init:
         condition: service_completed_successfully
@@ -26,7 +26,7 @@ services:
     container_name: dev-environment
     env_file:
       - .env
-    user: "1000:1000"
+    user: "1001:1001"
     init: true
     healthcheck:
       test: ["CMD", "pgrep", "sshd"]

@@ -35,8 +35,8 @@ set_volume_ownership() {
     
     # Skip chown when running as dev user - files are already owned correctly
     if [ "$(id -u)" = "0" ]; then
-        chown -R 1000:1000 /mnt/{security-tools,go-cache,shell-history,git-tools,aws-config,vscode-config,npm-cache,docker-config}
-        echo "✅ Volume ownership set to dev:dev (1000:1000)"
+        chown -R 1001:1001 /mnt/{security-tools,go-cache,shell-history,git-tools,aws-config,vscode-config,npm-cache,docker-config}
+        echo "✅ Volume ownership set to dev:dev (1001:1001)"
     else
         echo "✅ Running as dev user - ownership already correct"
     fi

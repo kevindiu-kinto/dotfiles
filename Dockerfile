@@ -1,7 +1,4 @@
-ARG TARGETPLATFORM=linux/amd64
-ARG BUILDPLATFORM=linux/amd64
-
-FROM --platform=linux/amd64 archlinux:latest AS base-system
+FROM --platform=linux/arm64 manjarolinux/base:latest AS base-system
 
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
@@ -10,12 +7,11 @@ ENV TERM=xterm-256color
 ENV MAKEFLAGS=-j$(nproc)
 
 ARG USERNAME=dev
-ARG USER_UID=${DEV_USER_ID:-1000}
-ARG USER_GID=${DEV_GROUP_ID:-1000}
+ARG USER_UID=${DEV_USER_ID:-1001}
+ARG USER_GID=${DEV_GROUP_ID:-1001}
 
 RUN --mount=type=cache,target=/var/cache/pacman/pkg \
     sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 20/' /etc/pacman.conf && \
-    echo 'Server = https://mirrors.kernel.org/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
 
@@ -39,20 +35,20 @@ RUN pacman -Sy --noconfirm && \
         ca-certificates && \
     pacman -Scc --noconfirm
 
+# Create our own dev user and group (avoiding conflicts with existing builder user)
 RUN groupadd --gid $USER_GID $USERNAME && \
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/zsh && \
     chmod 750 /home/$USERNAME && \
     echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Install yay from Manjaro repositories
+RUN pacman -S --noconfirm yay
 USER $USERNAME
 WORKDIR /home/$USERNAME
 
+# Initialize yay cache as user
 RUN --mount=type=cache,target=/home/$USERNAME/.cache,uid=$USER_UID,gid=$USER_GID \
-    git clone --depth 1 https://aur.archlinux.org/yay.git /tmp/yay && \
-    cd /tmp/yay && \
-    makepkg -si --noconfirm && \
-    cd / && \
-    rm -rf /tmp/yay && \
-    yay -Syu --noconfirm
+    yay --version
 
 FROM base-system AS pacman-tools
 
