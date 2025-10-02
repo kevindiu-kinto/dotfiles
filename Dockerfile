@@ -77,17 +77,13 @@ FROM aur-tools AS zsh-plugins
 COPY --chown=$USERNAME:$USERNAME scripts/install-zsh-plugins.sh /tmp/
 RUN chmod +x /tmp/install-zsh-plugins.sh && /tmp/install-zsh-plugins.sh
 
-FROM zsh-plugins AS directory-setup
+FROM zsh-plugins AS final
 
 COPY --chown=$USERNAME:$USERNAME scripts/setup-directories.sh /tmp/
 RUN chmod +x /tmp/setup-directories.sh && /tmp/setup-directories.sh
 
-FROM directory-setup AS security-hardening
-
 COPY --chown=$USERNAME:$USERNAME scripts/security-hardening.sh /tmp/
 RUN chmod +x /tmp/security-hardening.sh && /tmp/security-hardening.sh
-
-FROM security-hardening AS final
 
 COPY --chown=$USERNAME:$USERNAME scripts/start-sshd.sh /tmp/start-sshd.sh
 RUN echo "$USERNAME:dev" | sudo chpasswd && \
