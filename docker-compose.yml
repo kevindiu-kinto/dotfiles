@@ -67,6 +67,10 @@ services:
       - ./configs/linux/etc/sysctl.d/99-custom.conf:/etc/sysctl.d/99-custom.conf:ro
       - ./configs/linux/etc/profile.d/99-custom.sh:/etc/profile.d/99-custom.sh:ro
       - ./configs/linux/etc/sysctl.d/99-network.conf:/etc/sysctl.d/99-network.conf:ro
+      - ./configs/linux/etc/environment:/etc/environment:ro
+      - ./configs/linux/etc/modules-load.d/bbr.conf:/etc/modules-load.d/bbr.conf:ro
+      - ./configs/linux/etc/sysctl.d/99-bbr.conf:/etc/sysctl.d/99-bbr.conf:ro
+
       - security-tools:/home/dev/.security
       - go-cache:/home/dev/go
       - shell-history:/home/dev/.shell_history

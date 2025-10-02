@@ -44,9 +44,8 @@ RUN groupadd --gid $USER_GID $USERNAME && \
 USER $USERNAME
 WORKDIR /home/$USERNAME
 
-# Initialize yay cache as user
 RUN --mount=type=cache,target=/home/$USERNAME/.cache,uid=$USER_UID,gid=$USER_GID \
-    yay --version
+    yay -Sy --noconfirm
 
 FROM base-system AS pacman-tools
 
