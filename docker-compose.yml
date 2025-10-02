@@ -17,6 +17,7 @@ services:
       - FOWNER
       - SETGID
       - SETUID
+      - SYS_CHROOT
     read_only: false
     security_opt:
       - no-new-privileges:false
