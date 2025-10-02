@@ -8,8 +8,6 @@ ENV LC_ALL=en_US.UTF-8
 ENV SHELL=/bin/zsh
 ENV TERM=xterm-256color
 ENV MAKEFLAGS=-j$(nproc)
-ENV GOCACHE=/home/dev/go/.cache
-ENV GOMODCACHE=/home/dev/go/pkg/mod
 
 ARG USERNAME=dev
 ARG USER_UID=${DEV_USER_ID:-1000}
