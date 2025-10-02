@@ -1,5 +1,5 @@
 # Path to oh-my-zsh installation
-export ZSH="$HOME/.oh-my-zsh"
+export ZSH="/usr/share/oh-my-zsh"
 
 # GPG TTY configuration for commit signing
 export GPG_TTY=$(tty)

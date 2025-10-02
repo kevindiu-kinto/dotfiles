@@ -1,4 +1,7 @@
-FROM archlinux:latest AS base-system
+ARG TARGETPLATFORM=linux/amd64
+ARG BUILDPLATFORM=linux/amd64
+
+FROM --platform=linux/amd64 archlinux:latest AS base-system
 
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
@@ -63,18 +66,18 @@ COPY --chown=$USERNAME:$USERNAME scripts/install-go-tools.sh /tmp/
 RUN --mount=type=cache,target=/home/$USERNAME/go,uid=$USER_UID,gid=$USER_GID \
     chmod +x /tmp/install-go-tools.sh && /tmp/install-go-tools.sh
 
-FROM go-tools AS zsh-plugins
-
-COPY --chown=$USERNAME:$USERNAME scripts/install-zsh-plugins.sh /tmp/
-RUN chmod +x /tmp/install-zsh-plugins.sh && /tmp/install-zsh-plugins.sh
-
-FROM zsh-plugins AS aur-tools
+FROM go-tools AS aur-tools
 
 COPY --chown=$USERNAME:$USERNAME scripts/install-aur-tools.sh /tmp/
 RUN --mount=type=cache,target=/home/$USERNAME/.cache/yay,uid=$USER_UID,gid=$USER_GID \
     chmod +x /tmp/install-aur-tools.sh && /tmp/install-aur-tools.sh
 
-FROM aur-tools AS directory-setup
+FROM aur-tools AS zsh-plugins
+
+COPY --chown=$USERNAME:$USERNAME scripts/install-zsh-plugins.sh /tmp/
+RUN chmod +x /tmp/install-zsh-plugins.sh && /tmp/install-zsh-plugins.sh
+
+FROM zsh-plugins AS directory-setup
 
 COPY --chown=$USERNAME:$USERNAME scripts/setup-directories.sh /tmp/
 RUN chmod +x /tmp/setup-directories.sh && /tmp/setup-directories.sh
