@@ -1,6 +1,9 @@
 services:
   volume-init:
-    image: alpine:latest
+    build:
+      context: .
+      args:
+        - BUILD_DATE=${BUILD_DATE:-}
     volumes:
       - ./scripts/init-volumes.sh:/init-volumes.sh:ro
       - security-tools:/mnt/security-tools

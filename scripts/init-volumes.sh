@@ -8,13 +8,13 @@ init_volume_structure() {
     echo "📁 Creating directory structures..."
     
     mkdir -p /mnt/shell-history
-    mkdir -p /mnt/git-tools/gh /mnt/git-tools/git-credentials /mnt/git-tools/git-config
-    mkdir -p /mnt/security-tools/ssh /mnt/security-tools/gnupg /mnt/security-tools/ssh-host-keys
+    mkdir -p /mnt/git-tools/{gh,git-credentials,git-config}
+    mkdir -p /mnt/security-tools/{ssh,gnupg,ssh-host-keys}
     mkdir -p /mnt/aws-config
     mkdir -p /mnt/docker-config
     mkdir -p /mnt/npm-cache
     mkdir -p /mnt/vscode-config
-    mkdir -p /mnt/go-cache/.cache /mnt/go-cache/pkg /mnt/go-cache/src
+    mkdir -p /mnt/go-cache/{.cache,pkg,src}
     
     echo "✅ Directory structures created"
 }
@@ -25,9 +25,7 @@ init_volume_files() {
     mkdir -p /mnt/git-tools/git-credentials
     touch /mnt/git-tools/git-credentials/credentials
     
-    touch /mnt/shell-history/bash_history
-    touch /mnt/shell-history/zsh_history
-    touch /mnt/shell-history/tmux_history
+    touch /mnt/shell-history/{bash_history,zsh_history,tmux_history}
     
     echo "✅ Initial files created"
 }
@@ -35,9 +33,7 @@ init_volume_files() {
 set_volume_ownership() {
     echo "👤 Setting volume ownership..."
     
-    chown -R 1000:1000 /mnt/security-tools /mnt/go-cache /mnt/shell-history \
-                       /mnt/git-tools /mnt/aws-config /mnt/vscode-config \
-                       /mnt/npm-cache /mnt/docker-config
+    chown -R 1000:1000 /mnt/{security-tools,go-cache,shell-history,git-tools,aws-config,vscode-config,npm-cache,docker-config}
     
     echo "✅ Volume ownership set to dev:dev (1000:1000)"
 }
@@ -59,13 +55,10 @@ setup_ssh_keys() {
 set_volume_permissions() {
     echo "🔒 Setting volume permissions..."
     
-    chmod -R 755 /mnt/go-cache /mnt/git-tools /mnt/aws-config \
-                 /mnt/vscode-config /mnt/npm-cache /mnt/docker-config
+    chmod -R 755 /mnt/{go-cache,git-tools,aws-config,vscode-config,npm-cache,docker-config}
     
     chmod 755 /mnt/shell-history
-    chmod 644 /mnt/shell-history/bash_history
-    chmod 644 /mnt/shell-history/zsh_history
-    chmod 644 /mnt/shell-history/tmux_history
+    chmod 644 /mnt/shell-history/{bash_history,zsh_history,tmux_history}
     
     chmod -R 700 /mnt/security-tools
     
