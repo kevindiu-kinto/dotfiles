@@ -1,6 +1,9 @@
 # Path to oh-my-zsh installation
 export ZSH="/usr/share/oh-my-zsh"
 
+# Path to custom plugins (user-writable, no sudo needed)
+export ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
+
 # GPG TTY configuration for commit signing
 export GPG_TTY=$(tty)
 
