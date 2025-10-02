@@ -81,4 +81,9 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_FIND_NO_DUPS
 setopt HIST_SAVE_NO_DUPS
 
+if [[ $- == *i* ]] && [[ -z "$TMUX" ]] && [[ -t 0 ]]; then 
+    echo "🚀 Starting new tmux session"
+    exec tmux new-session
+fi
+
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
