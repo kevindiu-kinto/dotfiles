@@ -90,9 +90,7 @@ RUN chmod +x /tmp/security-hardening.sh && /tmp/security-hardening.sh
 FROM security-hardening AS final
 
 COPY --chown=$USERNAME:$USERNAME scripts/start-sshd.sh /tmp/start-sshd.sh
-RUN sudo mkdir -p /var/run/sshd /usr/share/empty.sshd && \
-    sudo chmod 755 /usr/share/empty.sshd && \
-    echo "$USERNAME:dev" | sudo chpasswd && \
+RUN echo "$USERNAME:dev" | sudo chpasswd && \
     sudo install -o root -g root -m 755 /tmp/start-sshd.sh /usr/local/bin/start-sshd.sh && \
     rm /tmp/start-sshd.sh
 

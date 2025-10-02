@@ -14,6 +14,13 @@ setup_directories() {
     fi
 }
 
+setup_ssh_directories() {
+    echo "🔧 Setting up SSH directories..."
+    sudo mkdir -p /var/run/sshd /usr/share/empty.sshd
+    sudo chmod 755 /usr/share/empty.sshd
+    echo "✅ SSH directories setup completed"
+}
+
 setup_symlinks() {
     echo "� Setting up symlinks..."
     
@@ -48,6 +55,7 @@ setup_docker_permissions() {
 
 setup_directories
 setup_symlinks
+setup_ssh_directories
 setup_docker_permissions
 
 echo '✅ Directory setup completed!'
