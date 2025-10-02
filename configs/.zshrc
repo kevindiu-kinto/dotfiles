@@ -3,6 +3,11 @@ export ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
 
 export GPG_TTY=$(tty)
 
+# ARM64 optimizations for user compilation
+export MAKEFLAGS="-j$(nproc) -march=armv8-a+crypto+crc"
+export CFLAGS="-march=armv8-a+crypto+crc -mtune=apple-a14"
+export CXXFLAGS="-march=armv8-a+crypto+crc -mtune=apple-a14"
+
 ZSH_THEME="robbyrussell"
 
 plugins=(

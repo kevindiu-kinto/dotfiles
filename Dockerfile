@@ -10,7 +10,7 @@ ARG USERNAME=dev
 ARG USER_UID=${DEV_USER_ID:-1001}
 ARG USER_GID=${DEV_GROUP_ID:-1001}
 
-RUN --mount=type=cache,target=/var/cache/pacman/pkg \
+RUN --mount=type=cache,target=/var/cache/pacman/pkg --mount=type=cache,target=/tmp \
     sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 20/' /etc/pacman.conf && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
@@ -61,7 +61,7 @@ RUN --mount=type=cache,target=/home/$USERNAME/go,uid=$USER_UID,gid=$USER_GID \
 FROM go-tools AS aur-tools
 
 COPY --chown=$USERNAME:$USERNAME scripts/install-aur-tools.sh /tmp/
-RUN --mount=type=cache,target=/home/$USERNAME/.cache/yay,uid=$USER_UID,gid=$USER_GID \
+RUN --mount=type=cache,target=/home/$USERNAME/.cache/yay,uid=$USER_UID,gid=$USER_GID --mount=type=cache,target=/home/$USERNAME/.cache/makepkg,uid=$USER_UID,gid=$USER_GID \
     chmod +x /tmp/install-aur-tools.sh && /tmp/install-aur-tools.sh
 
 FROM aur-tools AS zsh-plugins

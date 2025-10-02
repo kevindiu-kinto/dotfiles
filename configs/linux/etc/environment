@@ -1,1 +1,3 @@
-export MAKEFLAGS="-j$(nproc) -march=armv8-a"
+export MAKEFLAGS="-j$(nproc) -march=armv8-a+crypto+crc"
+export CFLAGS="-march=armv8-a+crypto+crc -mtune=apple-a14"
+export CXXFLAGS="-march=armv8-a+crypto+crc -mtune=apple-a14"
