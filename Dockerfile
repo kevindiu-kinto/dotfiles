@@ -41,9 +41,6 @@ RUN --mount=type=cache,target=/var/cache/pacman/pkg \
         ca-certificates && \
     pacman -Scc --noconfirm
 
-COPY configs/linux/sysctl.conf /etc/sysctl.d/99-custom.conf
-COPY configs/linux/profile /etc/profile.d/99-custom.sh
-
 RUN groupadd --gid $USER_GID $USERNAME && \
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/zsh && \
     chmod 750 /home/$USERNAME && \

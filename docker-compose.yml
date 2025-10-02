@@ -20,9 +20,6 @@ services:
     read_only: false
     security_opt:
       - no-new-privileges:false
-    sysctls:
-      - net.core.somaxconn=65535
-      - net.ipv4.ip_local_port_range=1024 65535
     ports:
       - "2222:2222"
       - "8080:8080"
@@ -34,6 +31,9 @@ services:
       - ./configs/.zshrc:/home/dev/.zshrc:ro
       - ./configs/.bashrc:/home/dev/.bashrc:ro
       - ./configs/.tmux.conf:/home/dev/.tmux.conf:ro
+      - ./configs/linux/etc/sysctl.d/99-custom.conf:/etc/sysctl.d/99-custom.conf:ro
+      - ./configs/linux/etc/profile.d/99-custom.sh:/etc/profile.d/99-custom.sh:ro
+      - ./configs/linux/etc/sysctl.d/99-network.conf:/etc/sysctl.d/99-network.conf:ro
       - security-tools:/home/dev/.security
       - go-cache:/home/dev/go
       - shell-history:/home/dev/.shell_history
