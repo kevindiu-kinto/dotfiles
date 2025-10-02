@@ -46,7 +46,6 @@ services:
       - ./workspace:/workspace
       - ./configs/.vimrc:/home/dev/.vimrc:ro
       - ./configs/.zshrc:/home/dev/.zshrc:ro
-      - ./configs/.bashrc:/home/dev/.bashrc:ro
       - ./configs/.tmux.conf:/home/dev/.tmux.conf:ro
       - ./configs/linux/etc/sysctl.d/99-custom.conf:/etc/sysctl.d/99-custom.conf:ro
       - ./configs/linux/etc/profile.d/99-custom.sh:/etc/profile.d/99-custom.sh:ro

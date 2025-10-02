@@ -37,9 +37,3 @@ echo "🔧 Enabling corepack..."
 sudo corepack enable || echo "⚠️  Failed to enable corepack (non-critical)"
 
 echo "✅ Pacman tools installation completed!"
-sudo pacman -Scc --noconfirm || true
-
-echo "🔧 Enabling corepack..."
-sudo corepack enable || echo "❌ Failed to enable corepack"
-
-echo "✅ Pacman tools installation completed!"

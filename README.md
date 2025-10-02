@@ -1,6 +1,6 @@
 # Development Environment Dotfiles
 
-Docker-based development environment with Arch Linux for Go development and general programming.
+A complete, ready-to-use development environment that runs in Docker. Perfect for Go development, cloud-native projects, and general programming. No more "it works on my machine" - get a consistent development environment anywhere.
 
 ## 🚀 Quick Start
 
@@ -31,30 +31,53 @@ make shell
 - **SSH** server for VS Code Remote
 
 ### Key Features
-- 🚀 **Auto-Entry** - Automatic container entry (`make install`)
-- 💾 **Persistent Storage** - Configs and credentials survive rebuilds
-- 🐹 **Multi-Language** - Go, Node.js support
-- ☁️ **Cloud Native** - Kubernetes + AWS tools
-- 🐳 **Docker-in-Docker** - Full container development
+- 🚀 **One Command Setup** - \`make build\` and you're ready to code
+- 💾 **Persistent Data** - Your work, configs, and credentials are saved across restarts
+- 🔑 **VS Code Ready** - Seamless integration with VS Code Remote-SSH
+- 🐹 **Go Development** - Optimized for Go with gopls, delve debugger, and proper module support
+- ☁️ **Cloud Development** - AWS CLI, kubectl, helm, and Terraform pre-configured
+- 🐳 **Container Native** - Docker-in-Docker for building and testing containers
+- ⚡ **Fast Startup** - Pre-built environment launches in seconds
 
 ## 📋 Commands
 
+### Getting Started
 ```bash
-make build           # Build and start
-make install         # Set up auto-container entry
-make start           # Start existing containers
-make stop            # Stop containers
-make clean           # Clean up
-make rm              # Remove everything including volumes
-make shell           # Open tmux session
-make ssh             # SSH access (for VS Code Remote)
-make help            # Show all commands
+make build           # Initial setup - builds and starts everything
+make shell           # Enter your development environment
+```
+
+### Daily Usage
+```bash
+make start           # Start the environment (after stopping)
+make stop            # Stop the environment (keeps your data)
+make install         # Auto-enter container when opening terminal
+```
+
+### VS Code Integration
+```bash
+make ssh-setup       # Set up VS Code Remote-SSH (one-time setup)
+make ssh             # Manual SSH connection
+```
+
+### Maintenance
+```bash
+make clean           # Clean up Docker cache and temporary files
+make rm              # Remove everything (⚠️ deletes all your work)
+make help            # Show all available commands
 ```
 
 ## 🔐 VS Code Integration
 
-1. Install "Remote - SSH" extension
-2. Add to `~/.ssh/config`:
+### Option 1: Automatic Setup (Recommended)
+```bash
+make ssh-setup       # Handles everything automatically
+```
+Then in VS Code: \`Remote-SSH: Connect to Host\` → \`dev-environment\`
+
+### Option 2: Manual Setup
+1. Install "Remote - SSH" extension in VS Code
+2. Add to \`~/.ssh/config\`:
    ```
    Host dev-environment
      HostName localhost
@@ -62,4 +85,51 @@ make help            # Show all commands
      User dev
    ```
 3. Connect via "Remote-SSH: Connect to Host" → "dev-environment"
-4. Password: `dev`
+4. Password: \`dev\`
+
+The automatic setup creates SSH keys for passwordless access and handles all configuration.
+
+## 💡 Tips
+
+- **First time**: Run \`make build\` to set everything up
+- **Daily use**: Just \`make shell\` to start coding
+- **VS Code users**: Use \`make ssh-setup\` once, then connect via Remote-SSH
+- **Auto-entry**: Run \`make install\` to automatically enter the container when you open a terminal
+- **Persistent data**: Your code, Git config, AWS credentials, and shell history are saved between sessions
+
+## 🗂 What Gets Persisted
+
+Your development environment saves:
+- All your code and projects in \`/workspace\`
+- Git configuration and credentials
+- SSH keys and GPG keys
+- AWS credentials and config
+- Shell history (zsh, bash, tmux)
+- Go module cache and compiled binaries
+- npm cache and global packages
+- VS Code extensions and settings
+
+## 🔧 Customization
+
+- **Shell config**: Edit \`configs/.zshrc\`
+- **Vim config**: Edit \`configs/.vimrc\`
+- **Tmux config**: Edit \`configs/.tmux.conf\`
+- **Add tools**: Modify \`scripts/install-*-tools.sh\`
+
+## 🐛 Troubleshooting
+
+**Container won't start?**
+```bash
+make clean && make build
+```
+
+**VS Code connection issues?**
+```bash
+make ssh-setup  # Resets SSH configuration
+```
+
+**Want to start fresh?**
+```bash
+make rm         # ⚠️ This deletes everything
+make build      # Rebuild from scratch
+```

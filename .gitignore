@@ -6,7 +6,6 @@ docker-compose.override.yml
 workspace/*
 
 # IDE
-.vscode/
 .idea/
 
 # OS generated files
