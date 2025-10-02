@@ -1,7 +1,4 @@
-ARG TARGETPLATFORM=linux/amd64
-ARG BUILDPLATFORM=linux/amd64
-
-FROM --platform=linux/amd64 archlinux:latest AS base-system
+FROM archlinux:latest AS base-system
 
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
@@ -10,7 +7,6 @@ ENV TERM=xterm-256color
 ENV MAKEFLAGS=-j$(nproc)
 ENV GOCACHE=/home/dev/go/.cache
 ENV GOMODCACHE=/home/dev/go/pkg/mod
-ENV GOTMPDIR=/tmp/go
 
 ARG USERNAME=dev
 ARG USER_UID=${DEV_USER_ID:-1000}
@@ -48,7 +44,8 @@ RUN groupadd --gid $USER_GID $USERNAME && \
 USER $USERNAME
 WORKDIR /home/$USERNAME
 
-RUN git clone --depth 1 https://aur.archlinux.org/yay.git /tmp/yay && \
+RUN --mount=type=cache,target=/home/$USERNAME/.cache/yay,uid=$USER_UID,gid=$USER_GID \
+    git clone --depth 1 https://aur.archlinux.org/yay.git /tmp/yay && \
     cd /tmp/yay && \
     makepkg -si --noconfirm && \
     cd / && \
@@ -63,7 +60,8 @@ RUN chmod +x /tmp/install-pacman-tools.sh && /tmp/install-pacman-tools.sh
 FROM pacman-tools AS go-tools
 
 COPY --chown=$USERNAME:$USERNAME scripts/install-go-tools.sh /tmp/
-RUN chmod +x /tmp/install-go-tools.sh && /tmp/install-go-tools.sh
+RUN --mount=type=cache,target=/home/$USERNAME/go,uid=$USER_UID,gid=$USER_GID \
+    chmod +x /tmp/install-go-tools.sh && /tmp/install-go-tools.sh
 
 FROM go-tools AS zsh-plugins
 
@@ -73,7 +71,8 @@ RUN chmod +x /tmp/install-zsh-plugins.sh && /tmp/install-zsh-plugins.sh
 FROM zsh-plugins AS aur-tools
 
 COPY --chown=$USERNAME:$USERNAME scripts/install-aur-tools.sh /tmp/
-RUN chmod +x /tmp/install-aur-tools.sh && /tmp/install-aur-tools.sh
+RUN --mount=type=cache,target=/home/$USERNAME/.cache/yay,uid=$USER_UID,gid=$USER_GID \
+    chmod +x /tmp/install-aur-tools.sh && /tmp/install-aur-tools.sh
 
 FROM aur-tools AS directory-setup
 
