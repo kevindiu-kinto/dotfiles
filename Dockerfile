@@ -32,17 +32,15 @@ RUN pacman -Sy --noconfirm && \
         unzip \
         tar \
         gzip \
+        yay \
         ca-certificates && \
     pacman -Scc --noconfirm
 
-# Create our own dev user and group (avoiding conflicts with existing builder user)
 RUN groupadd --gid $USER_GID $USERNAME && \
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/zsh && \
     chmod 750 /home/$USERNAME && \
     echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Install yay from Manjaro repositories
-RUN pacman -S --noconfirm yay
 USER $USERNAME
 WORKDIR /home/$USERNAME
 
