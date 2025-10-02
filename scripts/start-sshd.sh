@@ -7,15 +7,16 @@ echo "🚀 Starting SSH daemon..."
 SSH_KEYS_DIR="/home/dev/.security/ssh-host-keys"
 SYSTEM_SSH_DIR="/etc/ssh"
 
-# Ensure SSH keys directory exists
+# Ensure SSH keys directory exists with secure permissions
 mkdir -p "$SSH_KEYS_DIR"
+chmod 700 "$SSH_KEYS_DIR"
 
 # Generate SSH host keys if they don't exist
 if [ ! -f "$SSH_KEYS_DIR/ssh_host_rsa_key" ]; then
     echo "🔑 Generating SSH host keys in persistent storage..."
     
-    if sudo ssh-keygen -f "$SSH_KEYS_DIR/ssh_host_rsa_key" -N '' -t rsa && \
-       sudo ssh-keygen -f "$SSH_KEYS_DIR/ssh_host_ecdsa_key" -N '' -t ecdsa && \
+    if sudo ssh-keygen -f "$SSH_KEYS_DIR/ssh_host_rsa_key" -N '' -t rsa -b 4096 && \
+       sudo ssh-keygen -f "$SSH_KEYS_DIR/ssh_host_ecdsa_key" -N '' -t ecdsa -b 521 && \
        sudo ssh-keygen -f "$SSH_KEYS_DIR/ssh_host_ed25519_key" -N '' -t ed25519; then
         echo "✅ SSH host keys generated successfully"
     else
@@ -38,4 +39,5 @@ else
 fi
 
 echo "🌐 Starting SSH daemon on port 2222..."
-exec /usr/sbin/sshd -D
+
+exec sudo /usr/sbin/sshd -D

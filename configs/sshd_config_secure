@@ -1,0 +1,47 @@
+# Enhanced SSH security configuration
+Port 2222
+Protocol 2
+
+# Privilege separation for security (sshd runs as root, user processes as dev)
+UsePrivilegeSeparation yes
+StrictModes yes
+
+# Authentication
+PermitRootLogin no
+PasswordAuthentication yes
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+MaxAuthTries 3
+LoginGraceTime 30
+
+# Only allow specific user
+AllowUsers dev
+
+# Connection settings
+ClientAliveInterval 300
+ClientAliveCountMax 2
+MaxStartups 2:30:5
+MaxSessions 2
+
+# Security settings
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+UsePAM yes
+PrintMotd no
+X11Forwarding no
+AllowAgentForwarding yes
+AllowTcpForwarding yes
+GatewayPorts no
+
+# Disable potentially risky features
+PermitUserEnvironment no
+AcceptEnv LANG LC_*
+
+# Logging
+SyslogFacility AUTH
+LogLevel INFO
+
+# Host key settings
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key

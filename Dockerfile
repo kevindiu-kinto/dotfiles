@@ -82,13 +82,20 @@ FROM zsh-plugins AS directory-setup
 COPY --chown=$USERNAME:$USERNAME scripts/setup-directories.sh /tmp/
 RUN chmod +x /tmp/setup-directories.sh && /tmp/setup-directories.sh
 
-FROM directory-setup AS final
+FROM directory-setup AS security-hardening
+
+COPY --chown=$USERNAME:$USERNAME scripts/security-hardening.sh /tmp/
+RUN chmod +x /tmp/security-hardening.sh && /tmp/security-hardening.sh
+
+FROM security-hardening AS final
 
 COPY --chown=$USERNAME:$USERNAME scripts/start-sshd.sh /tmp/
+COPY configs/sshd_config_secure /tmp/sshd_config_secure
 RUN sudo mkdir -p /var/run/sshd && \
-    sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
-    sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
-    sudo sed -i 's/#Port 22/Port 2222/' /etc/ssh/sshd_config && \
+    sudo mkdir -p /usr/share/empty.sshd && \
+    sudo chmod 755 /usr/share/empty.sshd && \
+    sudo cp /tmp/sshd_config_secure /etc/ssh/sshd_config && \
+    sudo chmod 644 /etc/ssh/sshd_config && \
     echo "$USERNAME:dev" | sudo chpasswd && \
     sudo mv /tmp/start-sshd.sh /usr/local/bin/start-sshd.sh && \
     sudo chmod +x /usr/local/bin/start-sshd.sh
@@ -98,4 +105,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 EXPOSE 2222
 WORKDIR /workspace
-CMD ["sudo", "/usr/local/bin/start-sshd.sh"]
+CMD ["/usr/local/bin/start-sshd.sh"]

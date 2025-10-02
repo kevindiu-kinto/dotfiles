@@ -37,6 +37,10 @@ services:
     read_only: false
     security_opt:
       - no-new-privileges:false
+      - apparmor:unconfined
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+      - /run:noexec,nosuid,size=100m
     ports:
       - "2222:2222"
       - "8080:8080"

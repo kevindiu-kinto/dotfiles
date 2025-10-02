@@ -42,6 +42,20 @@ set_volume_ownership() {
     echo "✅ Volume ownership set to dev:dev (1000:1000)"
 }
 
+setup_ssh_keys() {
+    echo "🔑 Setting up SSH keys..."
+    
+    if [ -f /host-ssh/dev-environment.pub ]; then
+        echo "📋 Installing SSH public key..."
+        cp /host-ssh/dev-environment.pub /mnt/security-tools/ssh/authorized_keys
+        chmod 600 /mnt/security-tools/ssh/authorized_keys
+        echo "✅ SSH key installed"
+    else
+        echo "⚠️  No SSH public key found at /host-ssh/dev-environment.pub"
+        echo "   Run 'make ssh-setup' to generate keys first"
+    fi
+}
+
 set_volume_permissions() {
     echo "🔒 Setting volume permissions..."
     

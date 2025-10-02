@@ -128,12 +128,6 @@ ssh-setup:
 	else \
 		echo "✅ SSH key already exists"; \
 	fi
-	@echo "📋 Setting up container SSH directory..."
-	@docker exec dev-environment mkdir -p /home/dev/.ssh
-	@echo "🔐 Installing public key to container..."
-	@cat ~/.ssh/dev-environment.pub | docker exec -i dev-environment sh -c 'cat > /home/dev/.ssh/authorized_keys'
-	@docker exec dev-environment chmod 700 /home/dev/.ssh
-	@docker exec dev-environment chmod 600 /home/dev/.ssh/authorized_keys
 	@echo "⚙️  Updating SSH config..."
 	@if grep -q "^Host dev-environment" ~/.ssh/config 2>/dev/null; then \
 		sed -i '' '/^Host dev-environment$$/,/^$$/d' ~/.ssh/config; \
@@ -146,9 +140,17 @@ ssh-setup:
 	@echo "    IdentityFile ~/.ssh/dev-environment" >> ~/.ssh/config
 	@echo "    StrictHostKeyChecking no" >> ~/.ssh/config
 	@echo "    UserKnownHostsFile /dev/null" >> ~/.ssh/config
-	@echo "    PasswordAuthentication no" >> ~/.ssh/config
+	@echo "� Checking SSH key installation..."
+	@if docker exec dev-environment test -f /home/dev/.ssh/authorized_keys; then \
+		echo "✅ SSH key already installed in container"; \
+	else \
+		echo "📦 Installing SSH key to running container..."; \
+		docker exec dev-environment mkdir -p /home/dev/.ssh; \
+		cat ~/.ssh/dev-environment.pub | docker exec -i dev-environment sh -c 'cat > /home/dev/.ssh/authorized_keys && chmod 700 /home/dev/.ssh && chmod 600 /home/dev/.ssh/authorized_keys'; \
+		echo "✅ SSH key installed"; \
+	fi
 	@echo "🧪 Testing SSH key authentication..."
-	@ssh dev-environment 'echo "✅ SSH key authentication successful!"' || echo "❌ SSH setup failed"
+	@sleep 2 && ssh dev-environment 'echo "✅ SSH key authentication successful!"' || echo "❌ SSH setup failed - try 'make restart' and test again"
 	@echo "$(GREEN)[SUCCESS]$(NC) SSH key authentication configured!"
 	@echo "$(YELLOW)[VS CODE]$(NC) Connect to 'dev-environment' in VS Code Remote-SSH"
 
