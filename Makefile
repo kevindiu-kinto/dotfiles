@@ -115,7 +115,7 @@ uninstall:
 
 ssh:
 	@echo "$(BLUE)[SSH]$(NC) Connecting via SSH (password: dev)..."
-	@ssh -o StrictHostKeyChecking=no dev@localhost -p 2222
+	@ssh -o StrictHostKeyChecking=no dev@localhost -p 2222 || true
 
 logs:
 	@docker-compose logs -f
