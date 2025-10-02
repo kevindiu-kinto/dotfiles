@@ -14,19 +14,9 @@ setup_directories() {
     fi
 }
 
-setup_persistent_directories() {
-    echo "🔄 Setting up persistent directories..."
+setup_symlinks() {
+    echo "� Setting up symlinks..."
     
-    # Create directory structure
-    mkdir -p /home/dev/{.shell_history,.git_tools,.security,.aws,.docker}
-    mkdir -p /home/dev/.git_tools/{gh,git-credentials,git-config}
-    mkdir -p /home/dev/.security/{ssh,gnupg,ssh-host-keys}
-
-    # Create initial files
-    touch /home/dev/.git_tools/git-credentials/credentials
-    touch /home/dev/.shell_history/{bash_history,zsh_history,tmux_history}
-    
-    # Create symlinks
     ln -sf /home/dev/.git_tools/git-credentials/credentials /home/dev/.git-credentials
     ln -sf /home/dev/.git_tools/git-config/.gitconfig /home/dev/.gitconfig
     ln -sf /home/dev/.shell_history/bash_history /home/dev/.bash_history
@@ -34,11 +24,7 @@ setup_persistent_directories() {
     ln -sf /home/dev/.security/gnupg /home/dev/.gnupg
     ln -sf /home/dev/.git_tools/gh /home/dev/.config/gh
 
-    # Set permissions on non-volume directories
-    chmod 700 /home/dev/.ssh /home/dev/.gnupg
-    chmod 600 /home/dev/.git_tools/git-credentials/credentials
-    
-    echo "✅ Persistent directories setup completed"
+    echo "✅ Symlinks setup completed"
 }
 
 setup_docker_permissions() {
@@ -60,9 +46,8 @@ setup_docker_permissions() {
     fi
 }
 
-# Execute setup functions
 setup_directories
-setup_persistent_directories
+setup_symlinks
 setup_docker_permissions
 
 echo '✅ Directory setup completed!'
