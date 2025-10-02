@@ -89,13 +89,12 @@ RUN chmod +x /tmp/security-hardening.sh && /tmp/security-hardening.sh
 
 FROM security-hardening AS final
 
-COPY --chown=$USERNAME:$USERNAME scripts/start-sshd.sh /tmp/
-RUN sudo mkdir -p /var/run/sshd && \
-    sudo mkdir -p /usr/share/empty.sshd && \
+COPY --chown=$USERNAME:$USERNAME scripts/start-sshd.sh /tmp/start-sshd.sh
+RUN sudo mkdir -p /var/run/sshd /usr/share/empty.sshd && \
     sudo chmod 755 /usr/share/empty.sshd && \
     echo "$USERNAME:dev" | sudo chpasswd && \
-    sudo mv /tmp/start-sshd.sh /usr/local/bin/start-sshd.sh && \
-    sudo chmod +x /usr/local/bin/start-sshd.sh
+    sudo install -o root -g root -m 755 /tmp/start-sshd.sh /usr/local/bin/start-sshd.sh && \
+    rm /tmp/start-sshd.sh
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD pgrep sshd || exit 1
