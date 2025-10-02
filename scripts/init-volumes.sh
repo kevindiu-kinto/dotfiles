@@ -8,13 +8,13 @@ init_volume_structure() {
     echo "📁 Creating directory structures..."
     
     mkdir -p /mnt/shell-history
-    mkdir -p /mnt/git-tools/{gh,git-credentials,git-config}
-    mkdir -p /mnt/security-tools/{ssh,gnupg,ssh-host-keys}
+    mkdir -p /mnt/git-tools/gh /mnt/git-tools/git-credentials /mnt/git-tools/git-config
+    mkdir -p /mnt/security-tools/ssh /mnt/security-tools/gnupg /mnt/security-tools/ssh-host-keys
     mkdir -p /mnt/aws-config
     mkdir -p /mnt/docker-config
     mkdir -p /mnt/npm-cache
     mkdir -p /mnt/vscode-config
-    mkdir -p /mnt/go-cache/{.cache,pkg,src}
+    mkdir -p /mnt/go-cache/.cache /mnt/go-cache/pkg /mnt/go-cache/src
     
     echo "✅ Directory structures created"
 }
