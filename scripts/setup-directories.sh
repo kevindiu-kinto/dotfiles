@@ -37,7 +37,7 @@ setup_persistent_directories() {
     # Set permissions
     chmod 700 /home/dev/.ssh /home/dev/.gnupg
     chmod 600 /home/dev/.git_tools/git-credentials/credentials
-    sudo chown -R dev:dev /home/dev/.gnupg /home/dev/.ssh
+    sudo chown -R dev:dev /home/dev/.gnupg /home/dev/.ssh /home/dev/.vscode-server
     
     echo "✅ Persistent directories setup completed"
 }
