@@ -18,7 +18,8 @@ services:
     
   dev-env:
     depends_on:
-      - volume-init
+      volume-init:
+        condition: service_completed_successfully
     build:
       context: .
       args:
@@ -28,6 +29,15 @@ services:
       - .env
     user: "1000:1000"
     init: true
+    healthcheck:
+      test: ["CMD", "pgrep", "sshd"]
+      interval: 30s
+      timeout: 10s
+      start_period: 5s
+      retries: 3
+    labels:
+      - "com.docker.compose.project=dotfiles"
+      - "dev.environment.type=development"
     cap_drop:
       - ALL
     cap_add:

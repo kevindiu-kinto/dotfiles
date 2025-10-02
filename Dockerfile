@@ -90,9 +90,6 @@ RUN echo "$USERNAME:dev" | sudo chpasswd && \
     sudo install -o root -g root -m 755 /tmp/start-sshd.sh /usr/local/bin/start-sshd.sh && \
     rm /tmp/start-sshd.sh
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD pgrep sshd || exit 1
-
 EXPOSE 2222
 WORKDIR /workspace
 CMD ["/usr/local/bin/start-sshd.sh"]

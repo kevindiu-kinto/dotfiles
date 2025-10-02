@@ -1,4 +1,4 @@
-.PHONY: help build start stop clean logs shell ssh status rm install uninstall
+.PHONY: help build start stop restart clean logs shell ssh status rm install uninstall
 
 BLUE := \033[0;34m
 GREEN := \033[0;32m
@@ -17,6 +17,7 @@ help:
 	@printf "  \033[0;34mbuild\033[0m      Build and start the development environment\n"
 	@printf "  \033[0;34mstart\033[0m      Start existing containers\n"
 	@printf "  \033[0;34mstop\033[0m       Stop containers\n"
+	@printf "  \033[0;34mrestart\033[0m    Restart containers (stop + start)\n"
 	@echo ""
 	@printf "\033[1;33mMaintenance:\033[0m\n"
 	@printf "  \033[0;34mclean\033[0m          Clean cache and temporary data\n"
@@ -46,6 +47,12 @@ start:
 stop:
 	@echo "$(BLUE)[STOP]$(NC) Stopping containers..."
 	@docker-compose down
+
+restart:
+	@echo "$(BLUE)[RESTART]$(NC) Restarting containers..."
+	@$(MAKE) stop
+	@$(MAKE) start
+	@echo "$(GREEN)[SUCCESS]$(NC) Containers restarted!"
 
 clean:
 	@echo "$(YELLOW)[CLEAN]$(NC) Cleaning cache and temporary data..."
