@@ -64,16 +64,11 @@ services:
       - ./configs/.zshrc:/home/dev/.zshrc:ro
       - ./configs/.tmux.conf:/home/dev/.tmux.conf:ro
       - ./configs/linux/etc/ssh/sshd_config:/etc/ssh/sshd_config:ro
-      - ./configs/linux/etc/sysctl.d/99-custom.conf:/etc/sysctl.d/99-custom.conf:ro
-      - ./configs/linux/etc/profile.d/99-custom.sh:/etc/profile.d/99-custom.sh:ro
-      - ./configs/linux/etc/sysctl.d/99-network.conf:/etc/sysctl.d/99-network.conf:ro
-      - ./configs/linux/etc/sysctl.d/99-filesystem.conf:/etc/sysctl.d/99-filesystem.conf:ro
-      - ./configs/linux/etc/sysctl.d/99-hugepages.conf:/etc/sysctl.d/99-hugepages.conf:ro
-      - ./configs/linux/etc/environment:/etc/environment:ro
-      - ./configs/linux/etc/profile.d/99-development.sh:/etc/profile.d/99-development.sh:ro
+      - ./configs/linux/etc/sysctl.d/99-optimized.conf:/etc/sysctl.d/99-optimized.conf:ro
+      - ./configs/linux/etc/profile.d:/etc/profile.d:ro
       - ./configs/linux/etc/locale.conf:/etc/locale.conf:ro
       - ./configs/linux/etc/timezone:/etc/timezone:ro
-      - ./configs/linux/etc/security/limits.d/99-container.conf:/etc/security/limits.d/99-container.conf:ro
+      - ./configs/linux/etc/security:/etc/security:ro
 
       - security-tools:/home/dev/.security
       - go-cache:/home/dev/go

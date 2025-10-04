@@ -12,8 +12,6 @@ tools=(
     "fzf"
     "jq"
     "yq"
-    "httpie"
-    "ncdu"
     "lazygit"
     "docker"
     "docker-compose"
@@ -22,7 +20,6 @@ tools=(
     "go"
     "nodejs"
     "npm"
-    "zip"
     "kubectl"
     "helm"
 )
