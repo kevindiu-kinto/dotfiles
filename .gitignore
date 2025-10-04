@@ -5,6 +5,10 @@ docker-compose.override.yml
 # Workspace directory (user projects)
 workspace/*
 
+# Cache directories for performance optimization
+cache/
+*.cache
+
 # IDE
 .idea/
 
