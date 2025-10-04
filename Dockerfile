@@ -47,10 +47,17 @@ WORKDIR /home/$USERNAME
 RUN --mount=type=cache,target=/home/$USERNAME/.cache,uid=$USER_UID,gid=$USER_GID \
     yay -Sy --noconfirm
 
-FROM base-system AS pacman-tools
+FROM base-system AS aur-tools
+
+COPY --chown=$USERNAME:$USERNAME scripts/install-aur-tools.sh /tmp/
+RUN --mount=type=cache,target=/home/$USERNAME/.cache/yay,uid=$USER_UID,gid=$USER_GID --mount=type=cache,target=/home/$USERNAME/.cache/makepkg,uid=$USER_UID,gid=$USER_GID \
+    chmod +x /tmp/install-aur-tools.sh && /tmp/install-aur-tools.sh
+
+FROM aur-tools AS pacman-tools
 
 COPY --chown=$USERNAME:$USERNAME scripts/install-pacman-tools.sh /tmp/
-RUN chmod +x /tmp/install-pacman-tools.sh && /tmp/install-pacman-tools.sh
+RUN --mount=type=cache,target=/var/cache/pacman/pkg --mount=type=cache,target=/home/$USERNAME/.npm,uid=$USER_UID,gid=$USER_GID \
+    chmod +x /tmp/install-pacman-tools.sh && /tmp/install-pacman-tools.sh
 
 FROM pacman-tools AS go-tools
 
@@ -58,13 +65,7 @@ COPY --chown=$USERNAME:$USERNAME scripts/install-go-tools.sh /tmp/
 RUN --mount=type=cache,target=/home/$USERNAME/go,uid=$USER_UID,gid=$USER_GID \
     chmod +x /tmp/install-go-tools.sh && /tmp/install-go-tools.sh
 
-FROM go-tools AS aur-tools
-
-COPY --chown=$USERNAME:$USERNAME scripts/install-aur-tools.sh /tmp/
-RUN --mount=type=cache,target=/home/$USERNAME/.cache/yay,uid=$USER_UID,gid=$USER_GID --mount=type=cache,target=/home/$USERNAME/.cache/makepkg,uid=$USER_UID,gid=$USER_GID \
-    chmod +x /tmp/install-aur-tools.sh && /tmp/install-aur-tools.sh
-
-FROM aur-tools AS zsh-plugins
+FROM go-tools AS zsh-plugins
 
 COPY --chown=$USERNAME:$USERNAME scripts/install-zsh-plugins.sh /tmp/
 RUN chmod +x /tmp/install-zsh-plugins.sh && /tmp/install-zsh-plugins.sh
