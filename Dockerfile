@@ -69,6 +69,7 @@ RUN chmod +x /tmp/security-hardening.sh && /tmp/security-hardening.sh
 
 USER root
 COPY scripts/start-sshd.sh /tmp/start-sshd.sh
+RUN echo "$USERNAME:$USERNAME" | chpasswd
 RUN install -o root -g root -m 755 /tmp/start-sshd.sh /usr/local/bin/start-sshd.sh && \
     rm /tmp/start-sshd.sh
 
