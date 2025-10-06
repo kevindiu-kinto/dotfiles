@@ -1,0 +1,93 @@
+# Version control
+.git/
+.gitignore
+.github/
+.gitattributes
+
+# Documentation
+*.md
+README.md
+LICENSE
+CHANGELOG.md
+docs/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+.vim/
+.netrwhist
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts and dependencies
+node_modules/
+dist/
+build/
+target/
+out/
+bin/
+pkg/
+vendor/
+*.pyc
+__pycache__/
+*.egg-info/
+.eggs/
+
+# Test coverage
+coverage/
+.coverage
+*.coverprofile
+.pytest_cache/
+.nyc_output/
+
+# Environment files
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Container volumes
+workspace/
+.security/
+
+# Git hooks
+.git/hooks/
+
+# CI/CD
+.github/workflows/
+.gitlab-ci.yml
+.travis.yml
+Jenkinsfile
+
+# Development files
+.editorconfig
+.prettierrc
+.eslintrc
+.stylelintrc
