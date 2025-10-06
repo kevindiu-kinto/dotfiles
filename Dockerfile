@@ -66,10 +66,12 @@ RUN chmod +x /tmp/setup-directories.sh && /tmp/setup-directories.sh
 
 USER root
 COPY scripts/start-sshd.sh /tmp/start-sshd.sh
+COPY scripts/vnc-manager.sh /tmp/vnc-manager.sh
 RUN echo "$USERNAME:$USERNAME" | chpasswd
 RUN install -o root -g root -m 755 /tmp/start-sshd.sh /usr/local/bin/start-sshd.sh && \
-    rm /tmp/start-sshd.sh
+    install -o root -g root -m 755 /tmp/vnc-manager.sh /usr/local/bin/vnc-manager.sh && \
+    rm /tmp/start-sshd.sh /tmp/vnc-manager.sh
 
-EXPOSE 2222
+EXPOSE 2222 5901 6080
 WORKDIR /workspace
 CMD ["/usr/local/bin/start-sshd.sh"]
