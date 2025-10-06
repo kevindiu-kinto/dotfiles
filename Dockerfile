@@ -64,16 +64,12 @@ FROM tools AS final
 COPY --chown=$USERNAME:$USERNAME scripts/setup-directories.sh /tmp/
 RUN chmod +x /tmp/setup-directories.sh && /tmp/setup-directories.sh
 
-COPY --chown=$USERNAME:$USERNAME scripts/security-hardening.sh /tmp/
-RUN chmod +x /tmp/security-hardening.sh && /tmp/security-hardening.sh
-
 USER root
 COPY scripts/start-sshd.sh /tmp/start-sshd.sh
 RUN echo "$USERNAME:$USERNAME" | chpasswd
 RUN install -o root -g root -m 755 /tmp/start-sshd.sh /usr/local/bin/start-sshd.sh && \
     rm /tmp/start-sshd.sh
 
-USER $USERNAME
 EXPOSE 2222
 WORKDIR /workspace
 CMD ["/usr/local/bin/start-sshd.sh"]

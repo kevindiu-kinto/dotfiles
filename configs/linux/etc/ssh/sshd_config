@@ -9,6 +9,7 @@ HostKey /home/dev/.security/ssh-host-keys/ssh_host_ecdsa_key
 HostKey /home/dev/.security/ssh-host-keys/ssh_host_ed25519_key
 
 # Security settings
+PermitRootLogin no
 AuthorizedKeysFile .ssh/authorized_keys
 
 # Only allow specific user
