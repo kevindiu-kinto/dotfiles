@@ -26,8 +26,7 @@ services:
     container_name: dev-environment
     env_file:
       - .env
-    environment:
-      - DISPLAY=host.docker.internal:0
+    user: "1001:1001"
     init: true
     healthcheck:
       test: ["CMD", "pgrep", "sshd"]
@@ -56,8 +55,6 @@ services:
       - /run:noexec,nosuid,size=100m
     ports:
       - "2222:2222"
-      - "5901:5901"  # VNC port
-      - "6080:6080"  # noVNC web interface
       - "8080:8080"
       - "3000:3000"
       - "9000:9000"

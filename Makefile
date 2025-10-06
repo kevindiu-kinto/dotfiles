@@ -1,4 +1,4 @@
-.PHONY: help build start stop restart clean logs shell ssh status rm install uninstall vnc-start vnc-stop
+.PHONY: help build start stop restart clean logs shell ssh status rm install uninstall
 
 BLUE := \033[0;34m
 GREEN := \033[0;32m
@@ -31,11 +31,6 @@ help:
 	@printf "  \033[0;34mssh-setup\033[0m  Set up SSH key authentication (no password)\n"
 	@printf "  \033[0;34mlogs\033[0m       Show container logs\n"
 	@printf "  \033[0;34mstatus\033[0m     Show container status\n"
-	@echo ""
-	@printf "\033[1;33mGUI (VNC):\033[0m\n"
-	@printf "  \033[0;34mvnc-start\033[0m  Start VNC server (installs GUI on first run)\n"
-	@printf "  \033[0;34mvnc-stop\033[0m   Stop VNC server\n"
-	@printf "               💡 Access at http://localhost:6080/vnc.html (password: dev)\n"
 	@echo ""
 
 build:
@@ -174,11 +169,3 @@ status:
 	@echo ""
 	@echo "$(BLUE)[VOLUMES]$(NC) Persistent volumes:"
 	@docker volume ls | grep dotfiles || echo "No dotfiles volumes found"
-
-vnc-start:
-	@echo "$(BLUE)[VNC]$(NC) Starting VNC server..."
-	@docker exec dev-environment /usr/local/bin/vnc-manager.sh start
-
-vnc-stop:
-	@echo "$(BLUE)[VNC]$(NC) Stopping VNC server..."
-	@docker exec dev-environment /usr/local/bin/vnc-manager.sh stop

@@ -54,13 +54,6 @@ make stop            # Stop the environment (keeps your data)
 make install         # Auto-enter container when opening terminal
 ```
 
-
-### GUI Applications (Optional)
-```bash
-make vnc-start       # Start desktop GUI (web browser access)
-make vnc-stop        # Stop desktop GUI
-```
-Access at: http://localhost:6080/vnc.html (password: \`dev\`)
 ### VS Code Integration
 ```bash
 make ssh-setup       # Set up VS Code Remote-SSH (one-time setup)
@@ -102,7 +95,6 @@ The automatic setup creates SSH keys for passwordless access and handles all con
 - **Daily use**: Just \`make shell\` to start coding
 - **VS Code users**: Use \`make ssh-setup\` once, then connect via Remote-SSH
 - **Auto-entry**: Run \`make install\` to automatically enter the container when you open a terminal
-- **GUI apps**: Run `make vnc-start` for a desktop environment in your browser
 - **Persistent data**: Your code, Git config, AWS credentials, and shell history are saved between sessions
 
 ## 🗂 What Gets Persisted
