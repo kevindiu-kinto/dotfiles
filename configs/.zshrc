@@ -1,8 +1,6 @@
 export ZSH="/usr/share/oh-my-zsh"
 export ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
 
-export GPG_TTY=$(tty)
-
 # Enhanced ARM64 optimizations for Apple Silicon development
 export MAKEFLAGS="-j$(nproc) -march=armv8-a+crypto+crc+aes+sha2"
 export CFLAGS="-march=armv8-a+crypto+crc+aes+sha2 -mtune=apple-m1 -O3 -pipe"
@@ -36,8 +34,6 @@ fi
 export LANG=en_US.UTF-8
 export EDITOR='vim'
 
-export GOPATH=$(go env GOPATH)  # Use Go's default GOPATH
-export GOBIN=$GOPATH/bin
 export PATH=$PATH:/usr/local/go/bin:$GOBIN
 
 alias ll='ls -alF'

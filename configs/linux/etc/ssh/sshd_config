@@ -9,34 +9,13 @@ HostKey /home/dev/.security/ssh-host-keys/ssh_host_ecdsa_key
 HostKey /home/dev/.security/ssh-host-keys/ssh_host_ed25519_key
 
 # Security settings
-StrictModes yes
-PermitRootLogin no
-PasswordAuthentication yes
-PubkeyAuthentication yes
 AuthorizedKeysFile .ssh/authorized_keys
-MaxAuthTries 3
-LoginGraceTime 30
 
 # Only allow specific user
 AllowUsers dev
 
-# Connection settings
-ClientAliveInterval 300
-ClientAliveCountMax 2
-MaxStartups 2:30:5
-MaxSessions 2
-
 # Additional security
 PermitEmptyPasswords no
-ChallengeResponseAuthentication no
-UsePAM yes
-PrintMotd no
-X11Forwarding no
-AllowAgentForwarding yes
-AllowTcpForwarding yes
-GatewayPorts no
-PermitUserEnvironment no
-AcceptEnv LANG LC_*
 
 # Logging
 SyslogFacility AUTH
